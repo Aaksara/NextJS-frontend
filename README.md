@@ -1,7 +1,9 @@
-# BookX frontend
+# AKSARA frontend
 
-Next.js pages for the [BookX backend](https://github.com/Aaksara/backend). All the rules
-live in the backend. This app only shows pages and calls the API.
+Next.js app for the [AKSARA backend](https://github.com/Aaksara/backend). All the rules
+live in the backend. This app shows pages and calls the API.
+
+Stack: Next.js, Tailwind CSS, shadcn/ui, lucide icons and sonner toasts.
 
 ## Run it
 
@@ -25,23 +27,45 @@ The value is baked in at build time (`docker build --build-arg NEXT_PUBLIC_API_U
 ## Layout
 
 ```
-src/app/          one folder per page
-src/components/   Form: posts its fields to an API endpoint and shows the errors
-src/lib/api.ts    fetch wrapper: sends the auth cookies and refreshes them once on 401
-public/icons/     app icons
+src/app/                    pages (auth pages live under app/auth/)
+src/app/providers.tsx       app-wide providers (toasts)
+src/components/ui/          shadcn/ui components (button, card, input, label)
+src/components/form/        AuthForm, FormInput
+src/lib/api/api-client.ts   requestApi: calls the API with the Bearer token
+src/lib/utils/              cn(), page helpers
+src/services/               one service per backend area, e.g. auth.service.ts
+public/icons/               app icons
 ```
 
-The backend keeps the session in httpOnly cookies, so this app never handles tokens.
-For the browser to send those cookies, the backend's `CORS_ALLOWED_ORIGINS` must list
-this app's URL, and both apps must share a parent domain in production.
+Add shadcn/ui components with `pnpm dlx shadcn@latest add <name>`.
+
+## Calling the API
+
+Put the calls for each backend area in a service in `src/services/`, and use
+`requestApi` inside it:
+
+```ts
+await requestApi("/api/listings/");
+await requestApi("/api/listings/", { body: values });
+await requestApi("/api/listings/1/", { method: "PATCH", body: values });
+await requestApi("/api/listings/1/images/", { body: new FormData(form) });
+await requestApi("/api/listings/1/images/2/", { method: "DELETE" });
+```
+
+Login stores the access and refresh tokens in `localStorage`, and `requestApi` sends
+`Authorization: Bearer <access>`. When a call returns 401, it refreshes the tokens once
+and retries. Errors are thrown as `ApiRequestError`, with `message` and per-field `fields`.
+
+Validation and permission rules belong in the Django API.
 
 ## Scripts
 
-`pnpm lint`, `pnpm typecheck`, `pnpm format`, and `pnpm check` (runs all three).
+`pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm type-check`, and
+`pnpm check` (Biome, ESLint and TypeScript).
 
 ## Docker
 
 ```bash
-docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t bookx-frontend .
-docker run --rm -p 3000:3000 bookx-frontend
+docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t aksara-frontend .
+docker run --rm -p 3000:3000 aksara-frontend
 ```

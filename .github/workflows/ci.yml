@@ -23,9 +23,7 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm format:check
+      - run: pnpm check
       - run: pnpm build
 
   docker:
@@ -33,4 +31,4 @@ jobs:
     needs: check
     steps:
       - uses: actions/checkout@v4
-      - run: docker build -t bookx-frontend .
+      - run: docker build -t aksara-frontend .
