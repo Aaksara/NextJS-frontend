@@ -13,8 +13,8 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write . '!pnpm-lock.yaml'",
+    "format:check": "prettier --check . '!pnpm-lock.yaml'",
     "check": "pnpm lint && pnpm typecheck && pnpm format:check"
   },
   "dependencies": {
@@ -30,5 +30,10 @@
     "eslint-config-next": "16.4.0",
     "prettier": "3.9.10",
     "typescript": "5.9.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100
   }
 }

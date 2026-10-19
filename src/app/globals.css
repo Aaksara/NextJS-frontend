@@ -1,7 +1,6 @@
 :root {
   color-scheme: light dark;
   --bg: #ffffff;
-  --surface: #f5f5f5;
   --border: #e5e5e5;
   --text: #0a0a0a;
   --text-muted: #525252;
@@ -14,7 +13,6 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0a0a0a;
-    --surface: #171717;
     --border: #262626;
     --text: #fafafa;
     --text-muted: #a3a3a3;
@@ -45,17 +43,12 @@ body {
 }
 
 h1,
-h2,
 p {
   margin-top: 0;
 }
 
 h1 {
   font-size: 1.75rem;
-}
-
-h2 {
-  font-size: 1.125rem;
 }
 
 button,
@@ -71,14 +64,6 @@ input {
 
 .muted {
   color: var(--text-muted);
-}
-
-.panel {
-  margin-top: 1.25rem;
-  padding: 1.5rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
 }
 
 .stack {
