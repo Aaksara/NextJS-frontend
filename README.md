@@ -14,7 +14,7 @@ pnpm install
 pnpm dev        # http://localhost:3000
 ```
 
-Sign-up and password emails are printed in the backend log (`docker compose logs web`).
+Sign-up and password emails are printed in the backend terminal (`python manage.py runserver`).
 
 ## Configuration
 
@@ -22,7 +22,7 @@ Sign-up and password emails are printed in the backend log (`docker compose logs
 | --------------------- | ----------------------- | ------------------ |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | URL of the backend |
 
-The value is baked in at build time (`docker build --build-arg NEXT_PUBLIC_API_URL=...`).
+The value is baked in at build time.
 
 ## Layout
 
@@ -63,9 +63,14 @@ Validation and permission rules belong in the Django API.
 `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm type-check`, and
 `pnpm check` (Biome, ESLint and TypeScript).
 
-## Docker
+## Deploy (Vercel)
 
-```bash
-docker build --build-arg NEXT_PUBLIC_API_URL=https://api.example.com -t aksara-frontend .
-docker run --rm -p 3000:3000 aksara-frontend
-```
+Import this repo in Vercel (framework preset: **Next.js**) and set one environment
+variable:
+
+| Variable              | Value                                              |
+| --------------------- | -------------------------------------------------- |
+| `NEXT_PUBLIC_API_URL` | the backend URL, e.g. `https://aksara-api.vercel.app` |
+
+It is baked in at build time, so redeploy after changing it. On the backend, set
+`FRONTEND_URL`, `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS` to this app's URL.

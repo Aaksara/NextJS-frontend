@@ -8,15 +8,15 @@ const contentSecurityPolicy = [
 	"default-src 'self'",
 	`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
 	"style-src 'self' 'unsafe-inline'",
-	`img-src 'self' data: ${apiUrl}`,
-	`connect-src 'self' ${apiUrl} ${apiUrl.replace(/^http/, "ws")}`,
+	// Listing images come from signed bucket URLs and covers from Open Library / Google.
+	"img-src 'self' data: https:",
+	`connect-src 'self' ${apiUrl}`,
 	"object-src 'none'",
 	"base-uri 'self'",
 	"frame-ancestors 'none'",
 ].join("; ");
 
 const nextConfig: NextConfig = {
-	output: "standalone",
 	poweredByHeader: false,
 	async headers() {
 		return [
