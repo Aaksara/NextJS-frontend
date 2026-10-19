@@ -28,11 +28,11 @@ export default function FormInput({
 	const isPassword = type === "password";
 
 	return (
-		<div className="space-y-1.5">
+		<div className="space-y-2">
 			<Label htmlFor={id}>{label}</Label>
 			<div className="relative">
 				{icon && (
-					<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+					<span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
 						{icon}
 					</span>
 				)}
@@ -42,7 +42,7 @@ export default function FormInput({
 					type={isPassword && showPassword ? "text" : type}
 					required={required}
 					aria-invalid={!!errors?.length}
-					className={cn(icon && "pl-9", isPassword && "pr-9")}
+					className={cn("h-11 rounded-lg", icon && "pl-10", isPassword && "pr-10")}
 					{...props}
 				/>
 				{isPassword && (
@@ -50,7 +50,7 @@ export default function FormInput({
 						type="button"
 						onClick={() => setShowPassword(!showPassword)}
 						aria-label={showPassword ? "Hide password" : "Show password"}
-						className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+						className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
 					>
 						{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
 					</button>

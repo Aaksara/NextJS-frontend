@@ -1,7 +1,6 @@
 "use client";
 
-import { Lock, Mail, User } from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, Lock, Mail, MailCheck, User } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -34,48 +33,59 @@ export default function RegisterPage() {
 
 	if (done) {
 		return (
-			<AuthForm title="Check your email">
-				<p className="text-center text-sm">We sent a verification link to your university email.</p>
+			<AuthForm
+				eyebrow="Almost there"
+				title="Check your email."
+				subtitle="We sent a verification link to your university email. Open it to activate your account."
+				headerLink={{ prompt: "Already verified?", label: "Sign in", href: "/auth/login" }}
+			>
+				<div className="flex items-center gap-3 rounded-lg border bg-muted p-4 text-sm">
+					<MailCheck size={20} className="shrink-0 text-brand" />
+					The link may take a minute to arrive. Check your spam folder too.
+				</div>
 			</AuthForm>
 		);
 	}
 
 	return (
-		<AuthForm title="Create account" subtitle="Use your university email address.">
+		<AuthForm
+			eyebrow="Create your account"
+			title="Join AKSARA today."
+			subtitle="Sign up with your university email to start finding affordable course books."
+			headerLink={{ prompt: "Already have an account?", label: "Sign in", href: "/auth/login" }}
+		>
 			<form className="space-y-4" onSubmit={handleSubmit}>
 				<FormInput
 					id="full_name"
 					label="Full name"
 					autoComplete="name"
+					placeholder="Your full name"
 					icon={<User size={16} />}
 					errors={errors.full_name}
 				/>
 				<FormInput
 					id="email"
-					label="Email"
+					label="University email"
 					type="email"
 					autoComplete="email"
+					placeholder="you@university.edu"
 					icon={<Mail size={16} />}
 					errors={errors.email}
 				/>
 				<FormInput
 					id="password"
-					label="Password"
+					label="Create password"
 					type="password"
 					autoComplete="new-password"
+					placeholder="At least 8 characters"
 					icon={<Lock size={16} />}
 					errors={errors.password}
 				/>
-				<Button type="submit" className="w-full" disabled={loading}>
-					Create account
+				<Button type="submit" className="h-11 w-full rounded-lg shadow-md" disabled={loading}>
+					{loading ? "Creating account…" : "Create my account"}
+					{!loading && <ArrowRight />}
 				</Button>
 			</form>
-			<p className="mt-4 text-center text-sm">
-				Already registered?{" "}
-				<Link href="/auth/login" className="hover:underline">
-					Sign in
-				</Link>
-			</p>
 		</AuthForm>
 	);
 }

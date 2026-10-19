@@ -1,6 +1,6 @@
 "use client";
 
-import { Lock } from "lucide-react";
+import { ArrowRight, CircleCheck, Lock } from "lucide-react";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -33,14 +33,25 @@ export default function ResetPasswordClient({ uid, token }: { uid: string; token
 	}
 
 	return (
-		<AuthForm title="Reset password">
+		<AuthForm
+			eyebrow="Account recovery"
+			title="Set a new password."
+			subtitle="Choose a password you have not used for AKSARA before."
+			headerLink={{ prompt: "Remembered it?", label: "Sign in", href: "/auth/login" }}
+		>
 			{done ? (
-				<p className="text-center text-sm">
-					Your password has been reset.{" "}
-					<Link href="/auth/login" className="underline">
-						Sign in
-					</Link>
-				</p>
+				<div className="space-y-6">
+					<div className="flex items-center gap-3 rounded-lg border bg-muted p-4 text-sm">
+						<CircleCheck size={20} className="shrink-0 text-emerald-600" />
+						Your password has been reset.
+					</div>
+					<Button asChild className="h-11 w-full rounded-lg shadow-md">
+						<Link href="/auth/login">
+							Continue to sign in
+							<ArrowRight />
+						</Link>
+					</Button>
+				</div>
 			) : (
 				<form className="space-y-4" onSubmit={handleSubmit}>
 					<FormInput
@@ -48,11 +59,12 @@ export default function ResetPasswordClient({ uid, token }: { uid: string; token
 						label="New password"
 						type="password"
 						autoComplete="new-password"
+						placeholder="At least 8 characters"
 						icon={<Lock size={16} />}
 						errors={errors.new_password}
 					/>
-					<Button type="submit" className="w-full" disabled={loading}>
-						Set new password
+					<Button type="submit" className="h-11 w-full rounded-lg shadow-md" disabled={loading}>
+						{loading ? "Saving…" : "Set new password"}
 					</Button>
 				</form>
 			)}
