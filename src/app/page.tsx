@@ -21,7 +21,7 @@ export default function HomePage() {
 
 	return (
 		<main className="mx-auto max-w-2xl px-4 py-12">
-			<h1 className="text-3xl font-bold">AKSARA</h1>
+			<h1 className="text-3xl font-bold">Akshara</h1>
 			<p className="mt-2 text-muted-foreground">Buy, swap and donate textbooks on campus.</p>
 
 			{user === null && (

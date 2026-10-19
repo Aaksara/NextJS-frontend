@@ -21,3 +21,9 @@ pnpm-debug.log*
 # misc
 *.tsbuildinfo
 .DS_Store
+
+# pnpm cache (if pnpm ever puts it inside the project)
+.pnpm-store/
+
+# written by `next dev`
+AGENTS.md

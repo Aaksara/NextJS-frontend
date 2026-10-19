@@ -1,6 +1,5 @@
 "use client";
 
-import { Mail } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -32,23 +31,27 @@ export default function ForgotPasswordPage() {
 	}
 
 	return (
-		<AuthForm title="Forgot password" subtitle="We will email you a reset link.">
+		<AuthForm
+			title={done ? "Check your email" : "Reset your password"}
+			subtitle={done ? undefined : "Enter your university email and we'll send you a reset link."}
+			headerLink={{ prompt: "Remembered it?", label: "Sign in", href: "/auth/login" }}
+		>
 			{done ? (
-				<p className="text-center text-sm">
-					If an account exists for that email, a reset link has been sent.
+				<p className="text-sm leading-relaxed text-muted-foreground">
+					If an account exists for that email, a reset link is on its way.
 				</p>
 			) : (
-				<form className="space-y-4" onSubmit={handleSubmit}>
+				<form className="space-y-5" onSubmit={handleSubmit}>
 					<FormInput
 						id="email"
-						label="Email"
+						label="University email"
 						type="email"
 						autoComplete="email"
-						icon={<Mail size={16} />}
+						placeholder="you@university.edu"
 						errors={errors.email}
 					/>
-					<Button type="submit" className="w-full" disabled={loading}>
-						Send reset link
+					<Button type="submit" size="lg" className="w-full" disabled={loading}>
+						{loading ? "Sending…" : "Send reset link"}
 					</Button>
 				</form>
 			)}

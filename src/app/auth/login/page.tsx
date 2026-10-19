@@ -1,6 +1,5 @@
 "use client";
 
-import { Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
@@ -33,14 +32,18 @@ export default function LoginPage() {
 	}
 
 	return (
-		<AuthForm title="Sign in" subtitle="Use your university email address.">
-			<form className="space-y-4" onSubmit={handleSubmit}>
+		<AuthForm
+			title="Sign in to Akshara"
+			subtitle="Welcome back. Sign in with your university email."
+			headerLink={{ prompt: "New to Akshara?", label: "Create an account", href: "/auth/register" }}
+		>
+			<form className="space-y-5" onSubmit={handleSubmit}>
 				<FormInput
 					id="email"
-					label="Email"
+					label="University email"
 					type="email"
 					autoComplete="email"
-					icon={<Mail size={16} />}
+					placeholder="you@university.edu"
 					errors={errors.email}
 				/>
 				<FormInput
@@ -48,21 +51,20 @@ export default function LoginPage() {
 					label="Password"
 					type="password"
 					autoComplete="current-password"
-					icon={<Lock size={16} />}
+					labelAside={
+						<Link
+							href="/auth/forgot-password"
+							className="text-sm text-muted-foreground hover:text-foreground"
+						>
+							Forgot password?
+						</Link>
+					}
 					errors={errors.password}
 				/>
-				<Button type="submit" className="w-full" disabled={loading}>
-					Sign in
+				<Button type="submit" size="lg" className="w-full" disabled={loading}>
+					{loading ? "Signing in…" : "Sign in"}
 				</Button>
 			</form>
-			<div className="mt-4 flex justify-between text-sm">
-				<Link href="/auth/forgot-password" className="text-muted-foreground hover:underline">
-					Forgot password?
-				</Link>
-				<Link href="/auth/register" className="hover:underline">
-					Create account
-				</Link>
-			</div>
 		</AuthForm>
 	);
 }

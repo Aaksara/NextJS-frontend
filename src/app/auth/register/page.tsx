@@ -1,7 +1,5 @@
 "use client";
 
-import { Lock, Mail, User } from "lucide-react";
-import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -13,7 +11,7 @@ import { authService } from "@/services/auth.service";
 
 export default function RegisterPage() {
 	const [loading, setLoading] = useState(false);
-	const [done, setDone] = useState(false);
+	const [sentTo, setSentTo] = useState("");
 	const [errors, setErrors] = useState<Record<string, string[]>>({});
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -23,7 +21,7 @@ export default function RegisterPage() {
 		setErrors({});
 		try {
 			await authService.register({ full_name, email, password });
-			setDone(true);
+			setSentTo(email);
 		} catch (error) {
 			setErrors(getFieldErrors(error));
 			toast.error(getErrorMessage(error));
@@ -32,30 +30,35 @@ export default function RegisterPage() {
 		}
 	}
 
-	if (done) {
+	if (sentTo) {
 		return (
-			<AuthForm title="Check your email">
-				<p className="text-center text-sm">We sent a verification link to your university email.</p>
+			<AuthForm
+				title="Check your email"
+				headerLink={{ prompt: "Already verified?", label: "Sign in", href: "/auth/login" }}
+			>
+				<p className="text-sm leading-relaxed text-muted-foreground">
+					We sent a verification link to{" "}
+					<span className="font-medium text-foreground">{sentTo}</span>. Open it to activate your
+					account. If it hasn&apos;t arrived in a few minutes, check your spam folder.
+				</p>
 			</AuthForm>
 		);
 	}
 
 	return (
-		<AuthForm title="Create account" subtitle="Use your university email address.">
-			<form className="space-y-4" onSubmit={handleSubmit}>
-				<FormInput
-					id="full_name"
-					label="Full name"
-					autoComplete="name"
-					icon={<User size={16} />}
-					errors={errors.full_name}
-				/>
+		<AuthForm
+			title="Create your account"
+			subtitle="Use your university email. We'll send you a link to verify it."
+			headerLink={{ prompt: "Already have an account?", label: "Sign in", href: "/auth/login" }}
+		>
+			<form className="space-y-5" onSubmit={handleSubmit}>
+				<FormInput id="full_name" label="Full name" autoComplete="name" errors={errors.full_name} />
 				<FormInput
 					id="email"
-					label="Email"
+					label="University email"
 					type="email"
 					autoComplete="email"
-					icon={<Mail size={16} />}
+					placeholder="you@university.edu"
 					errors={errors.email}
 				/>
 				<FormInput
@@ -63,19 +66,13 @@ export default function RegisterPage() {
 					label="Password"
 					type="password"
 					autoComplete="new-password"
-					icon={<Lock size={16} />}
+					placeholder="At least 8 characters"
 					errors={errors.password}
 				/>
-				<Button type="submit" className="w-full" disabled={loading}>
-					Create account
+				<Button type="submit" size="lg" className="w-full" disabled={loading}>
+					{loading ? "Creating account…" : "Create account"}
 				</Button>
 			</form>
-			<p className="mt-4 text-center text-sm">
-				Already registered?{" "}
-				<Link href="/auth/login" className="hover:underline">
-					Sign in
-				</Link>
-			</p>
 		</AuthForm>
 	);
 }

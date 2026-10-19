@@ -25,20 +25,24 @@ export default function VerifyEmailClient({ uid, token }: { uid: string; token: 
 		}
 	}
 
-	return (
-		<AuthForm title="Verify email">
-			{done ? (
-				<p className="text-center text-sm">
-					Your email is verified.{" "}
-					<Link href="/auth/login" className="underline">
-						Sign in
-					</Link>
-				</p>
-			) : (
-				<Button className="w-full" disabled={loading} onClick={handleVerify}>
-					Verify my email
+	if (done) {
+		return (
+			<AuthForm title="Email verified" subtitle="Your account is ready. Sign in to get started.">
+				<Button asChild size="lg" className="w-full">
+					<Link href="/auth/login">Sign in</Link>
 				</Button>
-			)}
+			</AuthForm>
+		);
+	}
+
+	return (
+		<AuthForm
+			title="Verify your email"
+			subtitle="Confirm your university email to start exchanging books."
+		>
+			<Button size="lg" className="w-full" disabled={loading} onClick={handleVerify}>
+				{loading ? "Verifying…" : "Verify email"}
+			</Button>
 		</AuthForm>
 	);
 }

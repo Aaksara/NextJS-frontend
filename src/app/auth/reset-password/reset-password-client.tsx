@@ -1,6 +1,5 @@
 "use client";
 
-import { Lock } from "lucide-react";
 import Link from "next/link";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -32,30 +31,34 @@ export default function ResetPasswordClient({ uid, token }: { uid: string; token
 		}
 	}
 
+	if (done) {
+		return (
+			<AuthForm title="Password updated" subtitle="You can now sign in with your new password.">
+				<Button asChild size="lg" className="w-full">
+					<Link href="/auth/login">Sign in</Link>
+				</Button>
+			</AuthForm>
+		);
+	}
+
 	return (
-		<AuthForm title="Reset password">
-			{done ? (
-				<p className="text-center text-sm">
-					Your password has been reset.{" "}
-					<Link href="/auth/login" className="underline">
-						Sign in
-					</Link>
-				</p>
-			) : (
-				<form className="space-y-4" onSubmit={handleSubmit}>
-					<FormInput
-						id="new_password"
-						label="New password"
-						type="password"
-						autoComplete="new-password"
-						icon={<Lock size={16} />}
-						errors={errors.new_password}
-					/>
-					<Button type="submit" className="w-full" disabled={loading}>
-						Set new password
-					</Button>
-				</form>
-			)}
+		<AuthForm
+			title="Set a new password"
+			headerLink={{ prompt: "Remembered it?", label: "Sign in", href: "/auth/login" }}
+		>
+			<form className="space-y-5" onSubmit={handleSubmit}>
+				<FormInput
+					id="new_password"
+					label="New password"
+					type="password"
+					autoComplete="new-password"
+					placeholder="At least 8 characters"
+					errors={errors.new_password}
+				/>
+				<Button type="submit" size="lg" className="w-full" disabled={loading}>
+					{loading ? "Saving…" : "Update password"}
+				</Button>
+			</form>
 		</AuthForm>
 	);
 }
