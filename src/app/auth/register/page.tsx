@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowRight, Lock, Mail, MailCheck, User } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,7 +11,7 @@ import { authService } from "@/services/auth.service";
 
 export default function RegisterPage() {
 	const [loading, setLoading] = useState(false);
-	const [done, setDone] = useState(false);
+	const [sentTo, setSentTo] = useState("");
 	const [errors, setErrors] = useState<Record<string, string[]>>({});
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -22,7 +21,7 @@ export default function RegisterPage() {
 		setErrors({});
 		try {
 			await authService.register({ full_name, email, password });
-			setDone(true);
+			setSentTo(email);
 		} catch (error) {
 			setErrors(getFieldErrors(error));
 			toast.error(getErrorMessage(error));
@@ -31,59 +30,47 @@ export default function RegisterPage() {
 		}
 	}
 
-	if (done) {
+	if (sentTo) {
 		return (
 			<AuthForm
-				eyebrow="Almost there"
-				title="Check your email."
-				subtitle="We sent a verification link to your university email. Open it to activate your account."
+				title="Check your email"
 				headerLink={{ prompt: "Already verified?", label: "Sign in", href: "/auth/login" }}
 			>
-				<div className="flex items-center gap-3 rounded-lg border bg-muted p-4 text-sm">
-					<MailCheck size={20} className="shrink-0 text-brand" />
-					The link may take a minute to arrive. Check your spam folder too.
-				</div>
+				<p className="text-sm leading-relaxed text-muted-foreground">
+					We sent a verification link to{" "}
+					<span className="font-medium text-foreground">{sentTo}</span>. Open it to activate your
+					account. If it hasn&apos;t arrived in a few minutes, check your spam folder.
+				</p>
 			</AuthForm>
 		);
 	}
 
 	return (
 		<AuthForm
-			eyebrow="Create your account"
-			title="Join AKSARA today."
-			subtitle="Sign up with your university email to start finding affordable course books."
+			title="Create your account"
+			subtitle="Use your university email. We'll send you a link to verify it."
 			headerLink={{ prompt: "Already have an account?", label: "Sign in", href: "/auth/login" }}
 		>
-			<form className="space-y-4" onSubmit={handleSubmit}>
-				<FormInput
-					id="full_name"
-					label="Full name"
-					autoComplete="name"
-					placeholder="Your full name"
-					icon={<User size={16} />}
-					errors={errors.full_name}
-				/>
+			<form className="space-y-5" onSubmit={handleSubmit}>
+				<FormInput id="full_name" label="Full name" autoComplete="name" errors={errors.full_name} />
 				<FormInput
 					id="email"
 					label="University email"
 					type="email"
 					autoComplete="email"
 					placeholder="you@university.edu"
-					icon={<Mail size={16} />}
 					errors={errors.email}
 				/>
 				<FormInput
 					id="password"
-					label="Create password"
+					label="Password"
 					type="password"
 					autoComplete="new-password"
 					placeholder="At least 8 characters"
-					icon={<Lock size={16} />}
 					errors={errors.password}
 				/>
-				<Button type="submit" className="h-11 w-full rounded-lg shadow-md" disabled={loading}>
-					{loading ? "Creating account…" : "Create my account"}
-					{!loading && <ArrowRight />}
+				<Button type="submit" size="lg" className="w-full" disabled={loading}>
+					{loading ? "Creating account…" : "Create account"}
 				</Button>
 			</form>
 		</AuthForm>

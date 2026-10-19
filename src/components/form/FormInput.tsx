@@ -11,6 +11,8 @@ interface FormInputProps extends ComponentProps<"input"> {
 	id: string;
 	label: string;
 	icon?: ReactNode;
+	/** Shown at the right of the label, e.g. a "Forgot password?" link. */
+	labelAside?: ReactNode;
 	/** Messages from the API for this field. */
 	errors?: string[];
 }
@@ -19,6 +21,7 @@ export default function FormInput({
 	id,
 	label,
 	icon,
+	labelAside,
 	errors,
 	type = "text",
 	required = true,
@@ -29,10 +32,13 @@ export default function FormInput({
 
 	return (
 		<div className="space-y-2">
-			<Label htmlFor={id}>{label}</Label>
+			<div className="flex items-center justify-between">
+				<Label htmlFor={id}>{label}</Label>
+				{labelAside}
+			</div>
 			<div className="relative">
 				{icon && (
-					<span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+					<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
 						{icon}
 					</span>
 				)}
@@ -42,7 +48,7 @@ export default function FormInput({
 					type={isPassword && showPassword ? "text" : type}
 					required={required}
 					aria-invalid={!!errors?.length}
-					className={cn("h-11 rounded-lg", icon && "pl-10", isPassword && "pr-10")}
+					className={cn("h-10", icon && "pl-9", isPassword && "pr-10")}
 					{...props}
 				/>
 				{isPassword && (

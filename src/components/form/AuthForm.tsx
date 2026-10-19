@@ -1,101 +1,80 @@
-import { BookOpen, HeartHandshake, Repeat, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-
-import { Button } from "@/components/ui/button";
 
 interface AuthFormProps {
 	title: string;
 	subtitle?: string;
-	/** Small label above the title. */
-	eyebrow?: string;
 	/** Link in the top bar, e.g. to switch between sign in and registration. */
 	headerLink?: { prompt: string; label: string; href: string };
 	children: ReactNode;
 }
 
-const features = [
-	{ icon: BookOpen, text: "Buy used course books for less" },
-	{ icon: Repeat, text: "Swap the ones you have finished with" },
-	{ icon: HeartHandshake, text: "Donate to students who need them" },
+const steps = [
+	{ label: "List", text: "Add a book by its ISBN to sell, swap or donate." },
+	{ label: "Chat", text: "Agree on the condition and a time with the other student." },
+	{ label: "Meet", text: "Exchange on campus and pay in person." },
 ];
 
-export default function AuthForm({
-	title,
-	subtitle,
-	eyebrow,
-	headerLink,
-	children,
-}: AuthFormProps) {
+export default function AuthForm({ title, subtitle, headerLink, children }: AuthFormProps) {
 	return (
 		<div className="flex min-h-screen flex-col">
-			<header className="flex h-16 items-center justify-between gap-4 border-b px-4 sm:px-8 lg:h-20 lg:px-16">
-				<Link href="/" className="flex items-center gap-3">
-					<span className="grid size-9 place-items-center rounded-lg bg-panel text-lg text-panel-accent lg:size-10">
-						अ
-					</span>
-					<span className="leading-tight">
-						<span className="block font-serif text-lg tracking-[0.12em]">AKSARA</span>
-						<span className="hidden text-xs text-brand sm:block">अक्षर</span>
-					</span>
+			<header className="flex h-16 items-center justify-between gap-4 px-4 sm:px-8">
+				<Link href="/" className="flex items-center gap-2.5">
+					<Image
+						src="/icons/favicon.png"
+						alt=""
+						width={36}
+						height={36}
+						priority
+						className="rounded-full dark:bg-white"
+					/>
+					<span className="text-lg font-semibold tracking-tight">Akshara</span>
 				</Link>
 				{headerLink && (
-					<div className="flex items-center gap-3 text-sm">
-						<span className="hidden text-muted-foreground sm:inline">{headerLink.prompt}</span>
-						<Button asChild variant="outline">
-							<Link href={headerLink.href}>{headerLink.label}</Link>
-						</Button>
-					</div>
+					<p className="text-sm text-muted-foreground">
+						<span className="hidden sm:inline">{headerLink.prompt} </span>
+						<Link href={headerLink.href} className="font-medium text-primary hover:underline">
+							{headerLink.label}
+						</Link>
+					</p>
 				)}
 			</header>
 
-			<div className="flex flex-1 lg:p-4 lg:pl-0">
-				<main className="flex flex-1 justify-center px-4 py-10 sm:px-8 lg:items-center">
-					<div className="w-full max-w-md">
-						{eyebrow && (
-							<p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand">
-								{eyebrow}
-							</p>
-						)}
-						<h1 className="font-serif text-3xl sm:text-4xl">{title}</h1>
-						{subtitle && <p className="mt-3 text-muted-foreground">{subtitle}</p>}
+			<div className="flex flex-1 lg:p-3 lg:pt-0">
+				<main className="flex flex-1 justify-center px-4 pt-8 pb-16 sm:px-8 lg:items-center lg:pt-0">
+					<div className="w-full max-w-sm">
+						<h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+						{subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
 						<div className="mt-8">{children}</div>
-						<p className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-							<ShieldCheck size={14} className="text-emerald-600" />
-							Your account information is securely protected
-						</p>
 					</div>
 				</main>
 
-				<aside className="relative hidden w-[46%] max-w-2xl flex-col justify-between overflow-hidden rounded-2xl bg-panel p-10 text-panel-foreground lg:flex">
-					<span
-						aria-hidden
-						className="pointer-events-none absolute -bottom-24 -right-10 select-none text-[28rem] leading-none text-panel-foreground/5"
-					>
-						अ
-					</span>
-					<p className="text-xs font-semibold uppercase tracking-widest text-panel-muted">
-						AKSARA student marketplace
-					</p>
+				<aside className="hidden w-[44%] max-w-xl flex-col justify-between rounded-2xl bg-panel p-12 text-panel-foreground lg:flex">
+					<Image
+						src="/icons/favicon.png"
+						alt="Akshara logo"
+						width={64}
+						height={64}
+						className="rounded-full bg-white p-1"
+					/>
 
-					<div className="relative">
-						<p className="font-serif text-4xl leading-tight xl:text-5xl">
-							Everything for your semester, from students on your campus.
+					<div>
+						<p className="max-w-md text-3xl font-semibold leading-snug tracking-tight">
+							Pass your textbooks on to the next student.
 						</p>
-						<ul className="mt-10 space-y-4">
-							{features.map(({ icon: Icon, text }) => (
-								<li key={text} className="flex items-center gap-3 text-panel-muted">
-									<span className="grid size-9 place-items-center rounded-lg border border-panel-foreground/15 text-panel-accent">
-										<Icon size={16} />
-									</span>
-									{text}
-								</li>
+						<dl className="mt-10 divide-y divide-panel-foreground/15 border-y border-panel-foreground/15">
+							{steps.map(({ label, text }) => (
+								<div key={label} className="flex gap-6 py-4 text-sm">
+									<dt className="w-12 shrink-0 font-medium text-panel-accent">{label}</dt>
+									<dd className="text-panel-muted">{text}</dd>
+								</div>
 							))}
-						</ul>
+						</dl>
 					</div>
 
-					<p className="relative border-t border-panel-foreground/10 pt-6 text-sm text-panel-muted">
-						Open to verified university email addresses only.
+					<p className="text-sm text-panel-muted">
+						Open to students with a university email address.
 					</p>
 				</aside>
 			</div>
