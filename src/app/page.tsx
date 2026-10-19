@@ -1,35 +1,42 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import { logout } from '@/features/auth/actions';
-import { getCurrentUser } from '@/features/auth/session';
-import { InstallPrompt } from '@/features/install/install-prompt';
-import { PushNotifications } from '@/features/push/push-notifications';
-import { getVapidConfig } from '@/lib/env';
-import { siteConfig } from '@/lib/site';
+import { api } from '@/lib/api';
 
-export default async function HomePage() {
-  const user = await getCurrentUser();
-  // VAPID keys are runtime config, so one image can be deployed to any environment.
-  const vapid = getVapidConfig();
+type User = { full_name: string };
+
+export default function HomePage() {
+  // `undefined` while loading, `null` when signed out.
+  const [user, setUser] = useState<User | null>();
+
+  useEffect(() => {
+    api<User>('/api/auth/me/').then(setUser, () => setUser(null));
+  }, []);
+
+  async function signOut() {
+    await api('/api/auth/logout/', {});
+    setUser(null);
+  }
 
   return (
     <main className="container">
-      <h1>{siteConfig.name}</h1>
-      <p className="muted">{siteConfig.description}</p>
-      {user ? (
-        <form className="button-row" action={logout}>
-          <p>Signed in as {user.full_name}.</p>
-          <button type="submit" className="secondary">
-            Sign out
-          </button>
-        </form>
-      ) : (
+      <h1>BookX</h1>
+      <p className="muted">Buy, swap and donate textbooks on campus.</p>
+      {user === null && (
         <p>
           <Link href="/login">Sign in</Link> or <Link href="/register">create an account</Link>.
         </p>
       )}
-      <InstallPrompt />
-      {user && vapid && <PushNotifications vapidPublicKey={vapid.publicKey} />}
+      {user && (
+        <div className="button-row">
+          <p>Signed in as {user.full_name}.</p>
+          <button type="button" className="secondary" onClick={signOut}>
+            Sign out
+          </button>
+        </div>
+      )}
     </main>
   );
 }

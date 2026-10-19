@@ -1,16 +1,23 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { RegisterForm } from '@/features/auth/forms';
+import { Form } from '@/components/form';
 
-export const metadata: Metadata = { title: 'Create account' };
+export const metadata = { title: 'Create account' };
 
 export default function RegisterPage() {
   return (
     <main className="container">
       <h1>Create account</h1>
-      <p className="muted">Use your university email address.</p>
-      <RegisterForm />
+      <Form
+        path="/api/auth/register/"
+        submitLabel="Create account"
+        successMessage="Account created. Check your university email for a verification link."
+        fields={[
+          { name: 'full_name', label: 'Full name', autoComplete: 'name' },
+          { name: 'email', label: 'University email', type: 'email', autoComplete: 'email' },
+          { name: 'password', label: 'Password', type: 'password', autoComplete: 'new-password' },
+        ]}
+      />
       <p className="muted">
         Already registered? <Link href="/login">Sign in</Link>
       </p>

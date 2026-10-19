@@ -8,6 +8,5 @@ coverage
 .env.*
 !.env.example
 Dockerfile
-compose.yaml
 .dockerignore
 README.md

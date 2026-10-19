@@ -1,51 +1,43 @@
-import 'server-only';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
-import { headers } from 'next/headers';
+// Calls that must not trigger a token refresh when they return 401.
+const NO_REFRESH = ['/api/auth/login/', '/api/auth/token/refresh/'];
 
-import { getServerEnv } from './env';
-
-/** A DRF error body: `{ "detail": "..." }` or `{ "<field>": ["..."] }`. */
-export type ApiErrorBody = Record<string, unknown>;
-
+/** An error response: a message plus the messages for each form field. */
 export class ApiError extends Error {
   constructor(
-    readonly status: number,
-    readonly body: ApiErrorBody,
+    message: string,
+    readonly fields: Record<string, string[]> = {},
   ) {
-    super(typeof body.detail === 'string' ? body.detail : `Request failed with ${status}`);
+    super(message);
   }
 }
 
-type RequestOptions = {
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
-  body?: unknown;
-  token?: string;
-  /** Read from the incoming request when omitted; `proxy.ts` must pass it explicitly. */
-  forwardedFor?: string | null;
-};
-
-/** Calls the Django API from the server. Throws `ApiError` on a non-2xx response. */
-export async function api<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { method = 'GET', body, token } = options;
-  const forwardedFor =
-    options.forwardedFor === undefined
-      ? (await headers()).get('x-forwarded-for')
-      : options.forwardedFor;
-
-  const requestHeaders = new Headers({ Accept: 'application/json' });
-  if (body !== undefined) requestHeaders.set('Content-Type', 'application/json');
-  if (token) requestHeaders.set('Authorization', `Bearer ${token}`);
-  // Lets the backend rate-limit the real client rather than this server.
-  if (forwardedFor) requestHeaders.set('X-Forwarded-For', forwardedFor);
-
-  const response = await fetch(new URL(path, getServerEnv().API_URL), {
-    method,
-    headers: requestHeaders,
-    body: body === undefined ? undefined : JSON.stringify(body),
-    cache: 'no-store',
+function send(path: string, body?: object) {
+  return fetch(API_URL + path, {
+    method: body ? 'POST' : 'GET',
+    credentials: 'include', // the backend keeps the session in httpOnly cookies
+    headers: body ? { 'Content-Type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
   });
+}
 
-  const data: unknown = await response.json().catch(() => ({}));
-  if (!response.ok) throw new ApiError(response.status, data as ApiErrorBody);
-  return data as T;
+/** GET when there is no body, POST when there is one. */
+export async function api<T = unknown>(path: string, body?: object): Promise<T> {
+  let response = await send(path, body);
+  if (response.status === 401 && !NO_REFRESH.includes(path)) {
+    const refreshed = await send('/api/auth/token/refresh/', {});
+    if (refreshed.ok) response = await send(path, body);
+  }
+
+  const data = response.status === 204 ? null : await response.json().catch(() => null);
+  if (response.ok) return data as T;
+
+  // Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}.
+  const fields: Record<string, string[]> = {};
+  for (const [key, value] of Object.entries(data ?? {})) {
+    if (Array.isArray(value)) fields[key] = value.map(String);
+  }
+  const fallback = Object.keys(fields).length ? '' : 'Something went wrong. Please try again.';
+  throw new ApiError(data?.detail ?? fields.non_field_errors?.join(' ') ?? fallback, fields);
 }
