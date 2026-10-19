@@ -1,0 +1,91 @@
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
+
+const ACCESS_TOKEN_KEY = "aksaraAccessToken";
+const REFRESH_TOKEN_KEY = "aksaraRefreshToken";
+const REFRESH_ENDPOINT = "/api/auth/token/refresh/";
+// Calls that must not trigger a token refresh when they return 401.
+const NO_REFRESH = ["/api/auth/login/", REFRESH_ENDPOINT];
+
+type ApiMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export type ApiRequestOptions = {
+	/** Defaults to POST when there is a body, GET otherwise. */
+	method?: ApiMethod;
+	/** JSON object, or FormData for file uploads. */
+	body?: object;
+};
+
+/** An error response: a message plus the messages for each form field. */
+export class ApiRequestError extends Error {
+	constructor(
+		message: string,
+		readonly status: number,
+		readonly fields: Record<string, string[]> = {},
+	) {
+		super(message);
+		this.name = "ApiRequestError";
+	}
+}
+
+export const tokenStorage = {
+	getAccess: () => localStorage.getItem(ACCESS_TOKEN_KEY),
+	getRefresh: () => localStorage.getItem(REFRESH_TOKEN_KEY),
+	set(access: string, refresh: string) {
+		localStorage.setItem(ACCESS_TOKEN_KEY, access);
+		localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
+	},
+	clear() {
+		localStorage.removeItem(ACCESS_TOKEN_KEY);
+		localStorage.removeItem(REFRESH_TOKEN_KEY);
+	},
+};
+
+function send(endpoint: string, { method, body }: ApiRequestOptions) {
+	const isForm = body instanceof FormData;
+	const headers: Record<string, string> = { Accept: "application/json" };
+	if (body && !isForm) headers["Content-Type"] = "application/json";
+	const token = tokenStorage.getAccess();
+	if (token) headers.Authorization = `Bearer ${token}`;
+
+	return fetch(API_URL + endpoint, {
+		method: method ?? (body ? "POST" : "GET"),
+		headers,
+		body: isForm ? body : body ? JSON.stringify(body) : undefined,
+	});
+}
+
+/** Swaps the refresh token for new tokens. Signs out if it is no longer valid. */
+async function refreshTokens() {
+	const refresh = tokenStorage.getRefresh();
+	if (!refresh) return false;
+	const response = await send(REFRESH_ENDPOINT, { body: { refresh } });
+	if (!response.ok) {
+		tokenStorage.clear();
+		return false;
+	}
+	const data = await response.json();
+	tokenStorage.set(data.access, data.refresh);
+	return true;
+}
+
+export async function requestApi<T = unknown>(
+	endpoint: string,
+	options: ApiRequestOptions = {},
+): Promise<T> {
+	let response = await send(endpoint, options);
+	if (response.status === 401 && !NO_REFRESH.includes(endpoint) && (await refreshTokens())) {
+		response = await send(endpoint, options);
+	}
+
+	const data = response.status === 204 ? null : await response.json().catch(() => null);
+	if (response.ok) return data as T;
+
+	// Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}.
+	const fields: Record<string, string[]> = {};
+	for (const [key, value] of Object.entries(data ?? {})) {
+		if (Array.isArray(value)) fields[key] = value.map(String);
+	}
+	const message =
+		data?.detail ?? fields.non_field_errors?.join(" ") ?? "Please check the highlighted fields.";
+	throw new ApiRequestError(message, response.status, fields);
+}
