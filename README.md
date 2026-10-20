@@ -21,6 +21,7 @@ Sign-up and password emails are printed in the backend terminal (`python manage.
 | Variable              | Default                 | Description        |
 | --------------------- | ----------------------- | ------------------ |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | URL of the backend |
+| `NEXT_PUBLIC_APP_ENV` | `development`           | Environment badge in the admin top bar |
 
 The value is baked in at build time.
 
@@ -34,6 +35,7 @@ src/components/form/        AuthForm, FormInput
 src/lib/api/api-client.ts   requestApi: calls the API with the Bearer token
 src/lib/utils/              cn(), page helpers
 src/services/               one service per backend area, e.g. auth.service.ts
+src/hooks/                  shared React hooks (pagination, drag to reorder)
 public/icons/               app icons
 ```
 
@@ -58,10 +60,32 @@ and retries. Errors are thrown as `ApiRequestError`, with `message` and per-fiel
 
 Validation and permission rules belong in the Django API.
 
+## Admin console
+
+The super admin console lives at `/admin` in this same app and deploys with it. Sign in at
+`/admin/login` with the platform's single super admin, created on the backend with
+`python manage.py createsuperuser`. Any other account is turned away, and the API refuses
+it too, so the console's screens are not the only guard.
+
+```
+src/app/admin/login/          sign-in page
+src/app/admin/(console)/      routes behind the sign-in: components, banners, campus, students
+src/components/admin/         console shell: sign-in gate, sidebar, top bar, page header
+src/features/admin/<area>/    one folder per admin area:
+  types.ts                      data shapes, as the API returns them
+  service.ts                    the only file that calls the API
+  queries.ts                    React Query hooks over the service
+  constants.ts                  labels and badge tones
+  components/                   the area's UI
+```
+
+React Query is provided by `src/app/admin/layout.tsx`, so the storefront does not load it.
+The admin session is never "remembered": it ends when the browser closes.
+
 ## Scripts
 
 `pnpm dev`, `pnpm build`, `pnpm lint`, `pnpm format`, `pnpm type-check`, and
-`pnpm check` (Biome, ESLint and TypeScript).
+`pnpm check` (Biome, ESLint, TypeScript and Vitest).
 
 ## Deploy (Vercel)
 

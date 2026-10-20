@@ -78,24 +78,48 @@ async function refreshTokens() {
 	return true;
 }
 
-export async function requestApi<T = unknown>(
-	endpoint: string,
-	options: ApiRequestOptions = {},
-): Promise<T> {
-	let response = await send(endpoint, options);
+/** Sends the request, refreshing expired tokens once and retrying. */
+async function sendWithRefresh(endpoint: string, options: ApiRequestOptions) {
+	const response = await send(endpoint, options);
 	if (response.status === 401 && !NO_REFRESH.includes(endpoint) && (await refreshTokens())) {
-		response = await send(endpoint, options);
+		return send(endpoint, options);
 	}
+	return response;
+}
 
-	const data = response.status === 204 ? null : await response.json().catch(() => null);
-	if (response.ok) return data as T;
-
-	// Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}.
+/** Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}. */
+function toApiError(status: number, data: Record<string, unknown> | null) {
 	const fields: Record<string, string[]> = {};
 	for (const [key, value] of Object.entries(data ?? {})) {
 		if (Array.isArray(value)) fields[key] = value.map(String);
 	}
+	const detail = typeof data?.detail === "string" ? data.detail : undefined;
 	const message =
-		data?.detail ?? fields.non_field_errors?.join(" ") ?? "Please check the highlighted fields.";
-	throw new ApiRequestError(message, response.status, fields);
+		detail ?? fields.non_field_errors?.join(" ") ?? "Please check the highlighted fields.";
+	return new ApiRequestError(message, status, fields);
 }
+
+export async function requestApi<T = unknown>(
+	endpoint: string,
+	options: ApiRequestOptions = {},
+): Promise<T> {
+	const response = await sendWithRefresh(endpoint, options);
+	const data = response.status === 204 ? null : await response.json().catch(() => null);
+	if (response.ok) return data as T;
+	throw toApiError(response.status, data);
+}
+
+/** Downloads a file the API generates, e.g. a CSV export. */
+export async function requestFile(endpoint: string): Promise<Blob> {
+	const response = await sendWithRefresh(endpoint, {});
+	if (response.ok) return response.blob();
+	throw toApiError(response.status, await response.json().catch(() => null));
+}
+
+/** A page of results from a paginated list endpoint. */
+export type Paginated<T> = {
+	count: number;
+	next: string | null;
+	previous: string | null;
+	results: T[];
+};

@@ -9,6 +9,8 @@ export type User = {
 	phone: string;
 	avatar: string | null;
 	is_email_verified: boolean;
+	/** The platform's single super admin, who may use the admin console. */
+	is_superuser: boolean;
 	date_joined: string;
 };
 
