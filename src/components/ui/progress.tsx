@@ -3,25 +3,26 @@ import type * as React from "react";
 
 import { cn } from "@/lib/utils/utils";
 
-const indicatorVariants = cva("h-full rounded-full transition-[width]", {
+const toneVariants = cva("", {
 	variants: {
 		tone: {
 			primary: "bg-primary",
 			secondary: "bg-secondary",
 			tertiary: "bg-tertiary",
+			destructive: "bg-destructive",
 		},
 	},
 	defaultVariants: { tone: "primary" },
 });
 
-type ProgressProps = Omit<React.ComponentProps<"div">, "children"> &
-	VariantProps<typeof indicatorVariants> & {
-		/** Percentage from 0 to 100. */
-		value: number;
-	};
+type ToneProps = VariantProps<typeof toneVariants>;
+type BarProps = Omit<React.ComponentProps<"div">, "children"> & ToneProps;
 
-function Progress({ value, tone, className, ...props }: ProgressProps) {
-	const percent = Math.min(Math.max(value, 0), 100);
+const clamp = (value: number, max: number) => Math.min(Math.max(value, 0), max);
+
+/** Continuous bar. `value` is a percentage from 0 to 100. */
+function Progress({ value, tone, className, ...props }: BarProps & { value: number }) {
+	const percent = clamp(value, 100);
 	return (
 		<div
 			role="progressbar"
@@ -31,9 +32,44 @@ function Progress({ value, tone, className, ...props }: ProgressProps) {
 			className={cn("h-1.5 w-full overflow-hidden rounded-full bg-muted", className)}
 			{...props}
 		>
-			<div className={indicatorVariants({ tone })} style={{ width: `${percent}%` }} />
+			<div
+				className={cn("h-full rounded-full transition-[width]", toneVariants({ tone }))}
+				style={{ width: `${percent}%` }}
+			/>
 		</div>
 	);
 }
 
-export { Progress };
+/** Bar split into `steps` equal segments, the first `value` of them filled. */
+function SegmentedProgress({
+	steps,
+	value,
+	tone,
+	className,
+	...props
+}: BarProps & { steps: number; value: number }) {
+	const filled = clamp(value, steps);
+	return (
+		<div
+			role="progressbar"
+			aria-valuemin={0}
+			aria-valuemax={steps}
+			aria-valuenow={filled}
+			className={cn("flex gap-1.5", className)}
+			{...props}
+		>
+			{Array.from({ length: steps }, (_, i) => (
+				<div
+					// biome-ignore lint/suspicious/noArrayIndexKey: segments are identical and never reorder.
+					key={i}
+					className={cn(
+						"h-1.5 flex-1 rounded-full transition-colors",
+						i < filled ? toneVariants({ tone }) : "bg-muted",
+					)}
+				/>
+			))}
+		</div>
+	);
+}
+
+export { Progress, SegmentedProgress };

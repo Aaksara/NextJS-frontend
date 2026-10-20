@@ -32,10 +32,10 @@ export default function HomePage() {
 			{user === null && (
 				<div className="mt-6 flex gap-3">
 					<Button asChild>
-						<Link href="/auth/login">Sign in</Link>
+						<Link href="/login">Sign in</Link>
 					</Button>
 					<Button asChild variant="outlined">
-						<Link href="/auth/register">Create account</Link>
+						<Link href="/register">Create account</Link>
 					</Button>
 				</div>
 			)}

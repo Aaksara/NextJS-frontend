@@ -21,9 +21,11 @@ const buttonVariants = cva(
 			size: {
 				sm: "h-8 px-3",
 				md: "h-9 px-4",
-				lg: "h-10 px-6",
+				lg: "h-11 rounded-lg px-6",
 				"icon-sm": "size-8",
 				icon: "size-9",
+				/** No box, for a `link` button inside a sentence. */
+				inline: "h-auto p-0",
 			},
 		},
 		defaultVariants: { variant: "primary", size: "md" },

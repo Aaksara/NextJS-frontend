@@ -66,6 +66,7 @@
 
 /* Semantic roles. */
 :root {
+	color-scheme: light;
 	--radius: 0.625rem;
 	--background: var(--color-neutral-98);
 	--foreground: var(--color-neutral-seed);
@@ -107,45 +108,49 @@
 	--panel-accent: var(--color-secondary-seed);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: var(--color-neutral-10);
-		--foreground: var(--color-neutral-90);
-		--card: var(--color-neutral-20);
-		--card-foreground: var(--color-neutral-90);
+/*
+ * Dark theme, opt-in by adding the `dark` class to <html> (same as the `dark:` variant).
+ * The design spec defines only the light theme, so nothing enables it yet.
+ */
+.dark {
+	color-scheme: dark;
+	--background: var(--color-neutral-10);
+	--foreground: var(--color-neutral-90);
+	--card: var(--color-neutral-20);
+	--card-foreground: var(--color-neutral-90);
 
-		--primary: var(--color-primary-80);
-		--primary-foreground: var(--color-primary-20);
-		--primary-container: var(--color-primary-30);
-		--primary-container-foreground: var(--color-primary-90);
+	--primary: var(--color-primary-80);
+	--primary-foreground: var(--color-primary-20);
+	--primary-container: var(--color-primary-30);
+	--primary-container-foreground: var(--color-primary-90);
 
-		--secondary: var(--color-secondary-80);
-		--secondary-foreground: var(--color-secondary-20);
-		--secondary-container: var(--color-secondary-30);
-		--secondary-container-foreground: var(--color-secondary-90);
+	--secondary: var(--color-secondary-80);
+	--secondary-foreground: var(--color-secondary-20);
+	--secondary-container: var(--color-secondary-30);
+	--secondary-container-foreground: var(--color-secondary-90);
 
-		--tertiary: var(--color-tertiary-80);
-		--tertiary-foreground: var(--color-tertiary-20);
-		--tertiary-container: var(--color-tertiary-30);
-		--tertiary-container-foreground: var(--color-tertiary-90);
+	--tertiary: var(--color-tertiary-80);
+	--tertiary-foreground: var(--color-tertiary-20);
+	--tertiary-container: var(--color-tertiary-30);
+	--tertiary-container-foreground: var(--color-tertiary-90);
 
-		--inverse: var(--color-neutral-90);
-		--inverse-foreground: var(--color-neutral-20);
-		--muted: var(--color-neutral-20);
-		--muted-foreground: var(--color-neutral-70);
-		--accent: var(--color-neutral-30);
-		--accent-foreground: var(--color-neutral-90);
-		--destructive: oklch(0.704 0.191 22.216);
-		--destructive-foreground: var(--color-neutral-10);
-		--border: var(--color-neutral-30);
-		--input: var(--color-neutral-40);
-		--ring: var(--color-tertiary-70);
+	--inverse: var(--color-neutral-90);
+	--inverse-foreground: var(--color-neutral-20);
+	/* One step above the card, so inputs stay visible on it. */
+	--muted: var(--color-neutral-30);
+	--muted-foreground: var(--color-neutral-70);
+	--accent: var(--color-neutral-40);
+	--accent-foreground: var(--color-neutral-90);
+	--destructive: oklch(0.704 0.191 22.216);
+	--destructive-foreground: var(--color-neutral-10);
+	--border: var(--color-neutral-30);
+	--input: var(--color-neutral-40);
+	--ring: var(--color-tertiary-70);
 
-		--panel: var(--color-primary-20);
-		--panel-foreground: var(--color-primary-98);
-		--panel-muted: var(--color-primary-80);
-		--panel-accent: var(--color-secondary-seed);
-	}
+	--panel: var(--color-primary-20);
+	--panel-foreground: var(--color-primary-98);
+	--panel-muted: var(--color-primary-80);
+	--panel-accent: var(--color-secondary-seed);
 }
 
 @theme inline {

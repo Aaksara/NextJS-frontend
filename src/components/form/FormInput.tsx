@@ -46,7 +46,6 @@ export default function FormInput({
 				required={required}
 				aria-invalid={hasErrors}
 				aria-describedby={hasErrors ? errorId : undefined}
-				className="h-10"
 				startIcon={icon}
 				endAdornment={
 					isPassword && (

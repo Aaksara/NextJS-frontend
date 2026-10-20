@@ -1,10 +1,11 @@
 "use client";
 
+import { CircleCheck, MailCheck } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import AuthForm from "@/components/form/AuthForm";
+import AuthHeading from "@/components/auth/AuthHeading";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
@@ -27,22 +28,30 @@ export default function VerifyEmailClient({ uid, token }: { uid: string; token: 
 
 	if (done) {
 		return (
-			<AuthForm title="Email verified" subtitle="Your account is ready. Sign in to get started.">
+			<>
+				<AuthHeading
+					icon={<CircleCheck />}
+					title="Email verified"
+					description="Your account is ready. Sign in to get started."
+				/>
 				<Button asChild size="lg" className="w-full">
-					<Link href="/auth/login">Sign in</Link>
+					<Link href="/login">Sign in</Link>
 				</Button>
-			</AuthForm>
+			</>
 		);
 	}
 
 	return (
-		<AuthForm
-			title="Verify your email"
-			subtitle="Confirm your university email to start exchanging books."
-		>
+		<>
+			<AuthHeading
+				icon={<MailCheck />}
+				eyebrow="Email verification"
+				title="Verify your email"
+				description="Confirm your university email to start exchanging books."
+			/>
 			<Button size="lg" className="w-full" disabled={loading} onClick={handleVerify}>
 				{loading ? "Verifying…" : "Verify email"}
 			</Button>
-		</AuthForm>
+		</>
 	);
 }
