@@ -1,4 +1,5 @@
 import { requestApi } from "@/lib/api/api-client";
+import type { SliderKey } from "@/services/cms.service";
 
 import type { Slide } from "./types";
 
@@ -17,6 +18,7 @@ export const slideService = {
 
 	remove: (id: number) => requestApi(`${SLIDES}${id}/`, { method: "DELETE" }),
 
-	/** Saves the display order. `ids` must contain every slide exactly once. */
-	reorder: (ids: number[]) => requestApi<Slide[]>(`${SLIDES}reorder/`, { body: { ids } }),
+	/** Saves one slider's order. `ids` must contain each of its slides exactly once. */
+	reorder: (slider: SliderKey, ids: number[]) =>
+		requestApi<Slide[]>(`${SLIDES}reorder/`, { body: { slider, ids } }),
 };

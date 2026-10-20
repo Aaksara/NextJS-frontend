@@ -27,7 +27,8 @@ const features = [
 	},
 ];
 
-const slides: Slide[] = [
+/** Shown until the admin publishes slides for this slider. */
+const builtInSlides: Slide[] = [
 	{
 		image: "/images/landing/safety-inspect.svg",
 		alt: "A magnifying glass over an open textbook next to a condition checklist",
@@ -45,7 +46,8 @@ const slides: Slide[] = [
 	},
 ];
 
-export default function SafetySection() {
+/** `slides` are the ones published in the admin console for this section. */
+export default function SafetySection({ slides }: { slides: Slide[] }) {
 	return (
 		<section id="safety" className="scroll-mt-28 border-y bg-muted/60 py-20 md:scroll-mt-16">
 			<Container className="grid items-center gap-12 lg:grid-cols-2">
@@ -80,7 +82,7 @@ export default function SafetySection() {
 				</div>
 
 				<ImageSlider
-					slides={slides}
+					slides={slides.length ? slides : builtInSlides}
 					tint="caption"
 					sizes="(min-width: 1024px) 45vw, 100vw"
 					aria-label="Safe exchanges on campus"

@@ -12,6 +12,9 @@ export const HOME_SECTIONS = [
 
 export type HomeSectionKind = (typeof HOME_SECTIONS)[number];
 
+/** The storefront's sliders. Each shows its own slides from the admin console. */
+export type SliderKey = "home_hero" | "home_safety" | "sign_in";
+
 type ApiSlide = { id: number; caption: string; link: string; image: string; alt_text: string };
 
 /** Tags the home page's cached content; the admin console clears it after each change. */
@@ -59,9 +62,9 @@ export const cmsService = {
 		return kinds.filter(isHomeSectionKind);
 	},
 
-	/** Published hero slides, in order. Empty when there are none. */
-	getHeroSlides: async (): Promise<Slide[]> => {
-		const slides = await getPublic<ApiSlide[]>("/api/cms/slides/", []);
+	/** A slider's published slides, in order. Empty when it has none. */
+	getSlides: async (slider: SliderKey): Promise<Slide[]> => {
+		const slides = await getPublic<ApiSlide[]>(`/api/cms/slides/?slider=${slider}`, []);
 		return slides.map((slide) => ({
 			image: toPublicUrl(slide.image),
 			alt: slide.alt_text,

@@ -28,7 +28,7 @@ describe("cmsService", () => {
 		);
 	});
 
-	it("gives browsers the public address of uploaded images", async () => {
+	it("asks for one slider and gives browsers the public address of its images", async () => {
 		const slide = {
 			id: 1,
 			caption: "Spring drive",
@@ -36,10 +36,11 @@ describe("cmsService", () => {
 			alt_text: "Shelves",
 			image: "http://backend:8000/media/slides/a.webp",
 		};
-		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json([slide])));
+		const fetchMock = vi.fn().mockResolvedValue(json([slide]));
+		vi.stubGlobal("fetch", fetchMock);
 		const cms = await loadService();
 
-		await expect(cms.getHeroSlides()).resolves.toEqual([
+		await expect(cms.getSlides("home_hero")).resolves.toEqual([
 			{
 				image: "http://localhost:8000/media/slides/a.webp",
 				alt: "Shelves",
@@ -47,6 +48,10 @@ describe("cmsService", () => {
 				href: undefined,
 			},
 		]);
+		expect(fetchMock).toHaveBeenCalledWith(
+			"http://backend:8000/api/cms/slides/?slider=home_hero",
+			expect.anything(),
+		);
 	});
 
 	it("falls back to the built-in home page when the API is down", async () => {
@@ -61,6 +66,6 @@ describe("cmsService", () => {
 			"safety",
 			"call_to_action",
 		]);
-		await expect(cms.getHeroSlides()).resolves.toEqual([]);
+		await expect(cms.getSlides("home_hero")).resolves.toEqual([]);
 	});
 });

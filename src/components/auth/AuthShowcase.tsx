@@ -11,7 +11,8 @@ const steps = [
 	{ icon: MapPin, text: "Meet on campus and pay in person" },
 ];
 
-const slides: Slide[] = [
+/** Shown until the admin publishes slides for this slider. */
+const builtInSlides: Slide[] = [
 	{
 		image: "/images/slides/campus-library.webp",
 		alt: "Curved library shelves full of books",
@@ -29,8 +30,14 @@ const slides: Slide[] = [
 	},
 ];
 
+interface AuthShowcaseProps {
+	/** Slides published in the admin console for the sign-in pages. */
+	slides: Slide[];
+	className?: string;
+}
+
 /** Marketing panel joined to the auth form on wide screens. */
-export default function AuthShowcase({ className }: { className?: string }) {
+export default function AuthShowcase({ slides, className }: AuthShowcaseProps) {
 	return (
 		<div
 			className={cn(
@@ -60,7 +67,7 @@ export default function AuthShowcase({ className }: { className?: string }) {
 			</ul>
 
 			<ImageSlider
-				slides={slides}
+				slides={slides.length ? slides : builtInSlides}
 				sizes="(min-width: 1280px) 480px, 40vw"
 				aria-label="About Akshara"
 				className="mt-auto h-56 shadow-md"

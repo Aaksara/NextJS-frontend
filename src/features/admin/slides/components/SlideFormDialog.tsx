@@ -10,8 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { getErrorMessage, getFieldErrors } from "@/lib/utils/page-helpers";
-
+import type { SliderKey } from "@/services/cms.service";
+import { sliders } from "../constants";
 import { useDeleteSlide, useSaveSlide } from "../queries";
 import type { Slide } from "../types";
 
@@ -20,6 +22,8 @@ interface SlideFormDialogProps {
 	onClose: () => void;
 	/** The slide to edit. Without it the dialog adds a new one. */
 	slide?: Slide;
+	/** Where a new slide goes. */
+	slider: SliderKey;
 }
 
 /** The form as multipart data. An empty file input keeps the current image. */
@@ -32,7 +36,7 @@ function toFormData(form: HTMLFormElement) {
 	return data;
 }
 
-export default function SlideFormDialog({ open, onClose, slide }: SlideFormDialogProps) {
+export default function SlideFormDialog({ open, onClose, slide, slider }: SlideFormDialogProps) {
 	const save = useSaveSlide();
 	const remove = useDeleteSlide();
 	const [errors, setErrors] = useState<Record<string, string[]>>({});
@@ -68,7 +72,7 @@ export default function SlideFormDialog({ open, onClose, slide }: SlideFormDialo
 			open={open}
 			onClose={close}
 			title={slide ? "Edit slide" : "Add slide"}
-			description="Slides appear in the slider at the top of the home page."
+			description="Each slider on the site shows its own slides, in the order set on this page."
 		>
 			<form onSubmit={handleSubmit}>
 				<div className="max-h-[65vh] space-y-5 overflow-y-auto px-6 py-5">
@@ -100,6 +104,15 @@ export default function SlideFormDialog({ open, onClose, slide }: SlideFormDialo
 								className="h-auto py-2"
 							/>
 						</div>
+					</Field>
+					<Field htmlFor="slide-slider" label="Slider" errors={errors.slider}>
+						<Select id="slide-slider" name="slider" defaultValue={slide?.slider ?? slider}>
+							{sliders.map(({ key, label }) => (
+								<option key={key} value={key}>
+									{label}
+								</option>
+							))}
+						</Select>
 					</Field>
 					<Field htmlFor="slide-caption" label="Caption" errors={errors.caption}>
 						<Input
@@ -137,7 +150,7 @@ export default function SlideFormDialog({ open, onClose, slide }: SlideFormDialo
 					</Field>
 					<Label>
 						<Checkbox name="is_published" defaultChecked={slide?.is_published ?? true} />
-						Show on the home page
+						Show on the site
 					</Label>
 					{formError && !Object.keys(errors).length && (
 						<p role="alert" className="text-body-sm text-destructive">
