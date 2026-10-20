@@ -1,28 +1,26 @@
 import Link from "next/link";
 
+import { linksTo } from "@/components/landing/section-links";
 import Brand from "@/components/layout/Brand";
 import Container from "@/components/layout/Container";
 import { Text } from "@/components/ui/typography";
+import type { HomeSectionKind } from "@/services/cms.service";
 
-const columns = [
-	{
-		title: "Explore",
-		links: [
-			{ href: "#how-it-works", label: "How it works" },
-			{ href: "#sell-swap-donate", label: "Sell, swap, donate" },
-			{ href: "#safety", label: "Safety" },
-		],
-	},
-	{
-		title: "Account",
-		links: [
-			{ href: "/login", label: "Sign in" },
-			{ href: "/register", label: "Create an account" },
-		],
-	},
+const accountLinks = [
+	{ href: "/login", label: "Sign in" },
+	{ href: "/register", label: "Create an account" },
 ];
 
-export default function LandingFooter() {
+export default function LandingFooter({
+	visibleSections,
+}: {
+	visibleSections: readonly HomeSectionKind[];
+}) {
+	const columns = [
+		{ title: "Explore", links: linksTo(visibleSections) },
+		{ title: "Account", links: accountLinks },
+	].filter((column) => column.links.length > 0);
+
 	return (
 		<footer className="border-t bg-card">
 			<Container className="py-12">

@@ -22,6 +22,7 @@ Sign-up and password emails are printed in the backend terminal (`python manage.
 | --------------------- | ----------------------- | ------------------ |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | URL of the backend |
 | `NEXT_PUBLIC_APP_ENV` | `development`           | Environment badge in the admin top bar |
+| `API_INTERNAL_URL`    | `NEXT_PUBLIC_API_URL`   | How this server reaches the backend, if not by the public URL (e.g. `http://backend:8000` in Docker) |
 
 The value is baked in at build time.
 
@@ -69,7 +70,7 @@ it too, so the console's screens are not the only guard.
 
 ```
 src/app/admin/login/          sign-in page
-src/app/admin/(console)/      routes behind the sign-in: components, banners, campus, students
+src/app/admin/(console)/      routes behind the sign-in: students, slides, home, campus
 src/components/admin/         console shell: sign-in gate, sidebar, top bar, page header
 src/features/admin/<area>/    one folder per admin area:
   types.ts                      data shapes, as the API returns them
@@ -78,6 +79,11 @@ src/features/admin/<area>/    one folder per admin area:
   constants.ts                  labels and badge tones
   components/                   the area's UI
 ```
+
+The console edits what the storefront shows: the home page (`src/app/page.tsx`) reads the
+published slides and the visible sections, in order, through `src/services/cms.service.ts`.
+It refreshes them every minute, and falls back to the built-in slides and every section when
+the API cannot be reached.
 
 React Query is provided by `src/app/admin/layout.tsx`, so the storefront does not load it.
 The admin session is never "remembered": it ends when the browser closes.

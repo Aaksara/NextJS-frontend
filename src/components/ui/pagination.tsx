@@ -10,7 +10,7 @@ interface PaginationProps {
 	page: number;
 	pageCount: number;
 	onPageChange: (page: number) => void;
-	/** Shown on the left, e.g. "Showing 4 of 12 banners". */
+	/** Shown on the left, e.g. "42 students". */
 	summary: ReactNode;
 	className?: string;
 }
