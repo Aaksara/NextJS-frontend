@@ -3,9 +3,10 @@
 import { Eye, EyeOff } from "lucide-react";
 import { type ComponentProps, type ReactNode, useState } from "react";
 
-import { Input } from "@/components/ui/input";
+import { IconButton } from "@/components/ui/icon-button";
+import { IconInput } from "@/components/ui/icon-input";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils/utils";
+import { Text } from "@/components/ui/typography";
 
 interface FormInputProps extends ComponentProps<"input"> {
 	id: string;
@@ -29,6 +30,8 @@ export default function FormInput({
 }: FormInputProps) {
 	const [showPassword, setShowPassword] = useState(false);
 	const isPassword = type === "password";
+	const errorId = `${id}-error`;
+	const hasErrors = !!errors?.length;
 
 	return (
 		<div className="space-y-2">
@@ -36,33 +39,35 @@ export default function FormInput({
 				<Label htmlFor={id}>{label}</Label>
 				{labelAside}
 			</div>
-			<div className="relative">
-				{icon && (
-					<span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-						{icon}
-					</span>
-				)}
-				<Input
-					id={id}
-					name={id}
-					type={isPassword && showPassword ? "text" : type}
-					required={required}
-					aria-invalid={!!errors?.length}
-					className={cn("h-10", icon && "pl-9", isPassword && "pr-10")}
-					{...props}
-				/>
-				{isPassword && (
-					<button
-						type="button"
-						onClick={() => setShowPassword(!showPassword)}
-						aria-label={showPassword ? "Hide password" : "Show password"}
-						className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-					>
-						{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-					</button>
-				)}
-			</div>
-			{errors?.length ? <p className="text-xs text-destructive">{errors.join(" ")}</p> : null}
+			<IconInput
+				id={id}
+				name={id}
+				type={isPassword && showPassword ? "text" : type}
+				required={required}
+				aria-invalid={hasErrors}
+				aria-describedby={hasErrors ? errorId : undefined}
+				className="h-10"
+				startIcon={icon}
+				endAdornment={
+					isPassword && (
+						<IconButton
+							type="button"
+							variant="ghost"
+							size="icon-sm"
+							label={showPassword ? "Hide password" : "Show password"}
+							onClick={() => setShowPassword(!showPassword)}
+						>
+							{showPassword ? <EyeOff /> : <Eye />}
+						</IconButton>
+					)
+				}
+				{...props}
+			/>
+			{hasErrors && (
+				<Text id={errorId} variant="body-sm" tone="destructive">
+					{errors.join(" ")}
+				</Text>
+			)}
 		</div>
 	);
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import { authService, type User } from "@/services/auth.service";
 
 export default function HomePage() {
@@ -21,15 +22,19 @@ export default function HomePage() {
 
 	return (
 		<main className="mx-auto max-w-2xl px-4 py-12">
-			<h1 className="text-3xl font-bold">Akshara</h1>
-			<p className="mt-2 text-muted-foreground">Buy, swap and donate textbooks on campus.</p>
+			<Text as="h1" variant="headline-lg">
+				Akshara
+			</Text>
+			<Text variant="body-lg" tone="muted" className="mt-2">
+				Buy, swap and donate textbooks on campus.
+			</Text>
 
 			{user === null && (
 				<div className="mt-6 flex gap-3">
 					<Button asChild>
 						<Link href="/auth/login">Sign in</Link>
 					</Button>
-					<Button asChild variant="outline">
+					<Button asChild variant="outlined">
 						<Link href="/auth/register">Create account</Link>
 					</Button>
 				</div>
@@ -37,8 +42,8 @@ export default function HomePage() {
 
 			{user && (
 				<div className="mt-6 flex items-center gap-4">
-					<p>Signed in as {user.full_name}.</p>
-					<Button variant="outline" onClick={handleSignOut}>
+					<Text variant="body-lg">Signed in as {user.full_name}.</Text>
+					<Button variant="outlined" onClick={handleSignOut}>
 						Sign out
 					</Button>
 				</div>

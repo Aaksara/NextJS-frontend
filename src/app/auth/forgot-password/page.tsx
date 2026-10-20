@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import AuthForm from "@/components/form/AuthForm";
 import FormInput from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import { getErrorMessage, getFieldErrors, readForm } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
 
@@ -37,9 +38,9 @@ export default function ForgotPasswordPage() {
 			headerLink={{ prompt: "Remembered it?", label: "Sign in", href: "/auth/login" }}
 		>
 			{done ? (
-				<p className="text-sm leading-relaxed text-muted-foreground">
+				<Text variant="body-md" tone="muted">
 					If an account exists for that email, a reset link is on its way.
-				</p>
+				</Text>
 			) : (
 				<form className="space-y-5" onSubmit={handleSubmit}>
 					<FormInput

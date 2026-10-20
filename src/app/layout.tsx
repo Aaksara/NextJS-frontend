@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 
 import "./globals.css";
@@ -11,13 +11,16 @@ export const metadata: Metadata = {
 	icons: { icon: "/icons/favicon.png", apple: "/icons/favicon.png" },
 };
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const plusJakartaSans = Plus_Jakarta_Sans({
+	subsets: ["latin"],
+	variable: "--font-plus-jakarta-sans",
+});
 
-export const viewport: Viewport = { themeColor: "#18546c" };
+export const viewport: Viewport = { themeColor: "#003262" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en" className={inter.variable}>
+		<html lang="en" className={plusJakartaSans.variable}>
 			<body className="min-h-screen antialiased">
 				<Providers>{children}</Providers>
 			</body>

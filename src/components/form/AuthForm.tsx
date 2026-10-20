@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { Text, textVariants } from "@/components/ui/typography";
+
 interface AuthFormProps {
 	title: string;
 	subtitle?: string;
@@ -29,23 +31,38 @@ export default function AuthForm({ title, subtitle, headerLink, children }: Auth
 						priority
 						className="rounded-full dark:bg-white"
 					/>
-					<span className="text-lg font-semibold tracking-tight">Akshara</span>
+					<Text as="span" variant="headline-sm">
+						Akshara
+					</Text>
 				</Link>
 				{headerLink && (
-					<p className="text-sm text-muted-foreground">
+					<Text variant="body-md" tone="muted">
 						<span className="hidden sm:inline">{headerLink.prompt} </span>
-						<Link href={headerLink.href} className="font-medium text-primary hover:underline">
+						<Link
+							href={headerLink.href}
+							className={textVariants({
+								variant: "label-lg",
+								tone: "primary",
+								className: "hover:underline",
+							})}
+						>
 							{headerLink.label}
 						</Link>
-					</p>
+					</Text>
 				)}
 			</header>
 
 			<div className="flex flex-1 lg:p-3 lg:pt-0">
 				<main className="flex flex-1 justify-center px-4 pt-8 pb-16 sm:px-8 lg:items-center lg:pt-0">
 					<div className="w-full max-w-sm">
-						<h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-						{subtitle && <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
+						<Text as="h1" variant="headline-md">
+							{title}
+						</Text>
+						{subtitle && (
+							<Text variant="body-md" tone="muted" className="mt-2">
+								{subtitle}
+							</Text>
+						)}
 						<div className="mt-8">{children}</div>
 					</div>
 				</main>
@@ -60,22 +77,26 @@ export default function AuthForm({ title, subtitle, headerLink, children }: Auth
 					/>
 
 					<div>
-						<p className="max-w-md text-3xl font-semibold leading-snug tracking-tight">
+						<Text variant="headline-lg" className="max-w-md">
 							Pass your textbooks on to the next student.
-						</p>
+						</Text>
 						<dl className="mt-10 divide-y divide-panel-foreground/15 border-y border-panel-foreground/15">
 							{steps.map(({ label, text }) => (
-								<div key={label} className="flex gap-6 py-4 text-sm">
-									<dt className="w-12 shrink-0 font-medium text-panel-accent">{label}</dt>
-									<dd className="text-panel-muted">{text}</dd>
+								<div key={label} className="flex gap-6 py-4">
+									<Text as="dt" variant="label-lg" className="w-12 shrink-0 text-panel-accent">
+										{label}
+									</Text>
+									<Text as="dd" variant="body-md" className="text-panel-muted">
+										{text}
+									</Text>
 								</div>
 							))}
 						</dl>
 					</div>
 
-					<p className="text-sm text-panel-muted">
+					<Text variant="body-md" className="text-panel-muted">
 						Open to students with a university email address.
-					</p>
+					</Text>
 				</aside>
 			</div>
 		</div>

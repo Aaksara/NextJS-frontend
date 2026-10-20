@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import AuthForm from "@/components/form/AuthForm";
 import FormInput from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/typography";
 import { getErrorMessage, getFieldErrors, readForm } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
 
@@ -36,11 +37,14 @@ export default function RegisterPage() {
 				title="Check your email"
 				headerLink={{ prompt: "Already verified?", label: "Sign in", href: "/auth/login" }}
 			>
-				<p className="text-sm leading-relaxed text-muted-foreground">
+				<Text variant="body-md" tone="muted">
 					We sent a verification link to{" "}
-					<span className="font-medium text-foreground">{sentTo}</span>. Open it to activate your
-					account. If it hasn&apos;t arrived in a few minutes, check your spam folder.
-				</p>
+					<Text as="strong" variant="label-lg" tone="foreground">
+						{sentTo}
+					</Text>
+					. Open it to activate your account. If it hasn&apos;t arrived in a few minutes, check your
+					spam folder.
+				</Text>
 			</AuthForm>
 		);
 	}

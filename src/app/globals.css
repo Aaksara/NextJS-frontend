@@ -2,81 +2,225 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Tonal palettes, generated from the four brand seeds in the design spec.
+ * Tone N has an OKLCH lightness of N%, keeps the seed's hue, and has its
+ * chroma reduced only where needed to stay inside sRGB.
+ *
+ * Components should use the semantic roles below (bg-primary, text-muted-foreground,
+ * ...) rather than raw tones, so that light and dark themes stay in one place.
+ */
+@theme static {
+	--color-primary-seed: #003262;
+	--color-primary-10: oklch(0.1 0.035 253.1);
+	--color-primary-20: oklch(0.2 0.062 253.1);
+	--color-primary-30: oklch(0.3 0.093 253.1);
+	--color-primary-40: oklch(0.4 0.098 253.1);
+	--color-primary-50: oklch(0.5 0.098 253.1);
+	--color-primary-60: oklch(0.6 0.098 253.1);
+	--color-primary-70: oklch(0.7 0.098 253.1);
+	--color-primary-80: oklch(0.8 0.098 253.1);
+	--color-primary-90: oklch(0.9 0.049 253.1);
+	--color-primary-95: oklch(0.95 0.024 253.1);
+	--color-primary-98: oklch(0.98 0.009 253.1);
+
+	--color-secondary-seed: #fdb515;
+	--color-secondary-10: oklch(0.1 0.023 79.1);
+	--color-secondary-20: oklch(0.2 0.042 79.1);
+	--color-secondary-30: oklch(0.3 0.062 79.1);
+	--color-secondary-40: oklch(0.4 0.083 79.1);
+	--color-secondary-50: oklch(0.5 0.103 79.1);
+	--color-secondary-60: oklch(0.6 0.124 79.1);
+	--color-secondary-70: oklch(0.7 0.145 79.1);
+	--color-secondary-80: oklch(0.8 0.166 79.1);
+	--color-secondary-90: oklch(0.9 0.091 79.1);
+	--color-secondary-95: oklch(0.95 0.044 79.1);
+	--color-secondary-98: oklch(0.98 0.017 79.1);
+
+	--color-tertiary-seed: #3b7ea1;
+	--color-tertiary-10: oklch(0.1 0.023 234);
+	--color-tertiary-20: oklch(0.2 0.042 234);
+	--color-tertiary-30: oklch(0.3 0.063 234);
+	--color-tertiary-40: oklch(0.4 0.084 234);
+	--color-tertiary-50: oklch(0.5 0.087 234);
+	--color-tertiary-60: oklch(0.6 0.087 234);
+	--color-tertiary-70: oklch(0.7 0.087 234);
+	--color-tertiary-80: oklch(0.8 0.087 234);
+	--color-tertiary-90: oklch(0.9 0.058 234);
+	--color-tertiary-95: oklch(0.95 0.028 234);
+	--color-tertiary-98: oklch(0.98 0.011 234);
+
+	--color-neutral-seed: #22272a;
+	--color-neutral-10: oklch(0.1 0.009 234.1);
+	--color-neutral-20: oklch(0.2 0.009 234.1);
+	--color-neutral-30: oklch(0.3 0.009 234.1);
+	--color-neutral-40: oklch(0.4 0.009 234.1);
+	--color-neutral-50: oklch(0.5 0.009 234.1);
+	--color-neutral-60: oklch(0.6 0.009 234.1);
+	--color-neutral-70: oklch(0.7 0.009 234.1);
+	--color-neutral-80: oklch(0.8 0.009 234.1);
+	--color-neutral-90: oklch(0.9 0.009 234.1);
+	--color-neutral-95: oklch(0.95 0.009 234.1);
+	--color-neutral-98: oklch(0.98 0.009 234.1);
+}
+
+/* Semantic roles. */
 :root {
 	--radius: 0.625rem;
-	--background: oklch(1 0 0);
-	--foreground: oklch(0.145 0 0);
+	--background: var(--color-neutral-98);
+	--foreground: var(--color-neutral-seed);
 	--card: oklch(1 0 0);
-	--card-foreground: oklch(0.145 0 0);
-	/* Teal and amber from the logo. */
-	--primary: oklch(0.42 0.072 229);
-	--primary-foreground: oklch(0.985 0 0);
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
+	--card-foreground: var(--color-neutral-seed);
+
+	--primary: var(--color-primary-seed);
+	--primary-foreground: oklch(1 0 0);
+	--primary-container: var(--color-primary-90);
+	--primary-container-foreground: var(--color-primary-10);
+
+	/* The gold seed is too light for text or thin strokes, so it is the container. */
+	--secondary: var(--color-secondary-40);
+	--secondary-foreground: oklch(1 0 0);
+	--secondary-container: var(--color-secondary-seed);
+	--secondary-container-foreground: var(--color-secondary-10);
+
+	--tertiary: var(--color-tertiary-40);
+	--tertiary-foreground: oklch(1 0 0);
+	--tertiary-container: var(--color-tertiary-90);
+	--tertiary-container-foreground: var(--color-tertiary-10);
+
+	--inverse: var(--color-neutral-seed);
+	--inverse-foreground: var(--color-neutral-95);
+	--muted: var(--color-neutral-95);
+	--muted-foreground: var(--color-neutral-40);
+	--accent: var(--color-neutral-90);
+	--accent-foreground: var(--color-neutral-10);
 	--destructive: oklch(0.577 0.245 27.325);
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: oklch(0.42 0.072 229);
-	/* Amber, dark enough to read as text on the page background. */
-	--brand: oklch(0.56 0.12 65);
+	--destructive-foreground: oklch(1 0 0);
+	--border: var(--color-neutral-90);
+	--input: var(--color-neutral-80);
+	--ring: var(--color-tertiary-50);
+
 	/* Panel beside the auth forms. */
-	--panel: oklch(0.385 0.084 241.6);
-	--panel-foreground: oklch(0.98 0.005 230);
-	--panel-muted: oklch(0.82 0.03 230);
-	--panel-accent: oklch(0.8 0.13 72);
+	--panel: var(--color-primary-seed);
+	--panel-foreground: var(--color-primary-98);
+	--panel-muted: var(--color-primary-80);
+	--panel-accent: var(--color-secondary-seed);
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--background: oklch(0.145 0 0);
-		--foreground: oklch(0.985 0 0);
-		--card: oklch(0.205 0 0);
-		--card-foreground: oklch(0.985 0 0);
-		--primary: oklch(0.68 0.08 228);
-		--primary-foreground: oklch(0.2 0.04 235);
-		--muted: oklch(0.269 0 0);
-		--muted-foreground: oklch(0.708 0 0);
-		--accent: oklch(0.269 0 0);
-		--accent-foreground: oklch(0.985 0 0);
+		--background: var(--color-neutral-10);
+		--foreground: var(--color-neutral-90);
+		--card: var(--color-neutral-20);
+		--card-foreground: var(--color-neutral-90);
+
+		--primary: var(--color-primary-80);
+		--primary-foreground: var(--color-primary-20);
+		--primary-container: var(--color-primary-30);
+		--primary-container-foreground: var(--color-primary-90);
+
+		--secondary: var(--color-secondary-80);
+		--secondary-foreground: var(--color-secondary-20);
+		--secondary-container: var(--color-secondary-30);
+		--secondary-container-foreground: var(--color-secondary-90);
+
+		--tertiary: var(--color-tertiary-80);
+		--tertiary-foreground: var(--color-tertiary-20);
+		--tertiary-container: var(--color-tertiary-30);
+		--tertiary-container-foreground: var(--color-tertiary-90);
+
+		--inverse: var(--color-neutral-90);
+		--inverse-foreground: var(--color-neutral-20);
+		--muted: var(--color-neutral-20);
+		--muted-foreground: var(--color-neutral-70);
+		--accent: var(--color-neutral-30);
+		--accent-foreground: var(--color-neutral-90);
 		--destructive: oklch(0.704 0.191 22.216);
-		--border: oklch(1 0 0 / 10%);
-		--input: oklch(1 0 0 / 15%);
-		--ring: oklch(0.68 0.08 228);
-		--brand: oklch(0.78 0.13 72);
-		--panel: oklch(0.27 0.05 237);
-		--panel-foreground: oklch(0.97 0.005 230);
-		--panel-muted: oklch(0.76 0.03 230);
-		--panel-accent: oklch(0.8 0.13 72);
+		--destructive-foreground: var(--color-neutral-10);
+		--border: var(--color-neutral-30);
+		--input: var(--color-neutral-40);
+		--ring: var(--color-tertiary-70);
+
+		--panel: var(--color-primary-20);
+		--panel-foreground: var(--color-primary-98);
+		--panel-muted: var(--color-primary-80);
+		--panel-accent: var(--color-secondary-seed);
 	}
 }
 
 @theme inline {
-	--font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+	--font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+
 	--radius-sm: calc(var(--radius) - 4px);
 	--radius-md: calc(var(--radius) - 2px);
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
+
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
 	--color-primary: var(--primary);
 	--color-primary-foreground: var(--primary-foreground);
+	--color-primary-container: var(--primary-container);
+	--color-primary-container-foreground: var(--primary-container-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary-container: var(--secondary-container);
+	--color-secondary-container-foreground: var(--secondary-container-foreground);
+	--color-tertiary: var(--tertiary);
+	--color-tertiary-foreground: var(--tertiary-foreground);
+	--color-tertiary-container: var(--tertiary-container);
+	--color-tertiary-container-foreground: var(--tertiary-container-foreground);
+	--color-inverse: var(--inverse);
+	--color-inverse-foreground: var(--inverse-foreground);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);
 	--color-accent: var(--accent);
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
-	--color-brand: var(--brand);
 	--color-panel: var(--panel);
 	--color-panel-foreground: var(--panel-foreground);
 	--color-panel-muted: var(--panel-muted);
 	--color-panel-accent: var(--panel-accent);
+}
+
+/*
+ * Type scale from the design spec: Headline, Body and Label, each in lg/md/sm.
+ * `text-body-md` etc. set size, line height and weight together.
+ * Keep the names in sync with src/lib/theme/type-scale.ts.
+ */
+@theme {
+	--text-headline-lg: 2rem;
+	--text-headline-lg--line-height: 2.5rem;
+	--text-headline-lg--font-weight: 600;
+	--text-headline-md: 1.5rem;
+	--text-headline-md--line-height: 2rem;
+	--text-headline-md--font-weight: 600;
+	--text-headline-sm: 1.25rem;
+	--text-headline-sm--line-height: 1.75rem;
+	--text-headline-sm--font-weight: 600;
+
+	--text-body-lg: 1rem;
+	--text-body-lg--line-height: 1.5rem;
+	--text-body-md: 0.875rem;
+	--text-body-md--line-height: 1.25rem;
+	--text-body-sm: 0.75rem;
+	--text-body-sm--line-height: 1rem;
+
+	--text-label-lg: 0.875rem;
+	--text-label-lg--line-height: 1.25rem;
+	--text-label-lg--font-weight: 500;
+	--text-label-md: 0.75rem;
+	--text-label-md--line-height: 1rem;
+	--text-label-md--font-weight: 500;
+	--text-label-sm: 0.6875rem;
+	--text-label-sm--line-height: 1rem;
+	--text-label-sm--font-weight: 500;
 }
 
 @layer base {
@@ -84,6 +228,6 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply bg-background text-body-lg text-foreground;
 	}
 }

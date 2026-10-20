@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import AuthForm from "@/components/form/AuthForm";
 import FormInput from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
+import { textVariants } from "@/components/ui/typography";
 import { getErrorMessage, getFieldErrors, readForm } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
 
@@ -54,7 +55,7 @@ export default function LoginPage() {
 					labelAside={
 						<Link
 							href="/auth/forgot-password"
-							className="text-sm text-muted-foreground hover:text-foreground"
+							className={textVariants({ tone: "muted", className: "hover:text-foreground" })}
 						>
 							Forgot password?
 						</Link>
