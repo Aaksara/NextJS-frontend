@@ -1,13 +1,17 @@
 "use client";
 
-import Link from "next/link";
+import { ArrowRight, Lock, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { toast } from "sonner";
 
-import AuthForm from "@/components/form/AuthForm";
+import AuthFooter from "@/components/auth/AuthFooter";
+import AuthHeading from "@/components/auth/AuthHeading";
 import FormInput from "@/components/form/FormInput";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { TextLink } from "@/components/ui/text-link";
 import { getErrorMessage, getFieldErrors, readForm } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
 
@@ -18,11 +22,11 @@ export default function LoginPage() {
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
-		const { email, password } = readForm(event, "email", "password");
+		const { email, password, remember } = readForm(event, "email", "password", "remember");
 		setLoading(true);
 		setErrors({});
 		try {
-			await authService.login(email, password);
+			await authService.login(email, password, remember === "on");
 			router.push("/");
 		} catch (error) {
 			setErrors(getFieldErrors(error));
@@ -32,16 +36,18 @@ export default function LoginPage() {
 	}
 
 	return (
-		<AuthForm
-			title="Sign in to Akshara"
-			subtitle="Welcome back. Sign in with your university email."
-			headerLink={{ prompt: "New to Akshara?", label: "Create an account", href: "/auth/register" }}
-		>
+		<>
+			<AuthHeading
+				eyebrow="Student access"
+				title="Welcome back"
+				description="Sign in with your university email to buy, sell and swap textbooks."
+			/>
 			<form className="space-y-5" onSubmit={handleSubmit}>
 				<FormInput
 					id="email"
 					label="University email"
 					type="email"
+					icon={<Mail />}
 					autoComplete="email"
 					placeholder="you@university.edu"
 					errors={errors.email}
@@ -50,21 +56,23 @@ export default function LoginPage() {
 					id="password"
 					label="Password"
 					type="password"
+					icon={<Lock />}
 					autoComplete="current-password"
-					labelAside={
-						<Link
-							href="/auth/forgot-password"
-							className="text-sm text-muted-foreground hover:text-foreground"
-						>
-							Forgot password?
-						</Link>
-					}
 					errors={errors.password}
 				/>
+				<div className="flex items-center justify-between">
+					<Label>
+						<Checkbox name="remember" />
+						Remember me
+					</Label>
+					<TextLink href="/forgot-password">Forgot password?</TextLink>
+				</div>
 				<Button type="submit" size="lg" className="w-full" disabled={loading}>
 					{loading ? "Signing in…" : "Sign in"}
+					{!loading && <ArrowRight />}
 				</Button>
 			</form>
-		</AuthForm>
+			<AuthFooter prompt="New to Akshara?" label="Create an account" href="/register" />
+		</>
 	);
 }

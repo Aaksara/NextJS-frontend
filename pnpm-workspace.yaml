@@ -1,7 +1,9 @@
 saveExact: true
 engineStrict: true
 
-# Dependency lifecycle scripts are opt-in. unrs-resolver's postinstall only
-# downloads a fallback binary; the prebuilt optional package covers our platforms.
+# Dependency lifecycle scripts are opt-in. The postinstalls of unrs-resolver and
+# esbuild (via vitest) only fetch a fallback binary; the prebuilt optional
+# packages cover our platforms.
 allowBuilds:
+  esbuild: false
   unrs-resolver: false

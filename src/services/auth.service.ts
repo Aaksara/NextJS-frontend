@@ -17,11 +17,11 @@ type LoginResponse = { access: string; refresh: string; user: User };
 export type RegisterInput = { full_name: string; email: string; password: string };
 
 export const authService = {
-	login: async (email: string, password: string) => {
+	login: async (email: string, password: string, remember: boolean) => {
 		const data = await requestApi<LoginResponse>("/api/auth/login/", {
 			body: { email, password },
 		});
-		tokenStorage.set(data.access, data.refresh);
+		tokenStorage.set(data.access, data.refresh, remember);
 		return data.user;
 	},
 

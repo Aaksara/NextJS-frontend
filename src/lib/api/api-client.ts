@@ -27,16 +27,26 @@ export class ApiRequestError extends Error {
 	}
 }
 
+// Remembered sessions live in localStorage; others in sessionStorage, which the
+// browser clears when it closes.
+const currentStore = () =>
+	localStorage.getItem(REFRESH_TOKEN_KEY) ? localStorage : sessionStorage;
+
 export const tokenStorage = {
-	getAccess: () => localStorage.getItem(ACCESS_TOKEN_KEY),
-	getRefresh: () => localStorage.getItem(REFRESH_TOKEN_KEY),
-	set(access: string, refresh: string) {
-		localStorage.setItem(ACCESS_TOKEN_KEY, access);
-		localStorage.setItem(REFRESH_TOKEN_KEY, refresh);
+	getAccess: () => currentStore().getItem(ACCESS_TOKEN_KEY),
+	getRefresh: () => currentStore().getItem(REFRESH_TOKEN_KEY),
+	isRemembered: () => currentStore() === localStorage,
+	set(access: string, refresh: string, remember: boolean) {
+		tokenStorage.clear();
+		const store = remember ? localStorage : sessionStorage;
+		store.setItem(ACCESS_TOKEN_KEY, access);
+		store.setItem(REFRESH_TOKEN_KEY, refresh);
 	},
 	clear() {
-		localStorage.removeItem(ACCESS_TOKEN_KEY);
-		localStorage.removeItem(REFRESH_TOKEN_KEY);
+		for (const store of [localStorage, sessionStorage]) {
+			store.removeItem(ACCESS_TOKEN_KEY);
+			store.removeItem(REFRESH_TOKEN_KEY);
+		}
 	},
 };
 
@@ -64,7 +74,7 @@ async function refreshTokens() {
 		return false;
 	}
 	const data = await response.json();
-	tokenStorage.set(data.access, data.refresh);
+	tokenStorage.set(data.access, data.refresh, tokenStorage.isRemembered());
 	return true;
 }
 
