@@ -20,6 +20,10 @@ interface ImageSliderProps {
 	/** Sets the slider's size, e.g. `h-48` or `h-full`. */
 	className?: string;
 	"aria-label"?: string;
+	/** `full` tints the whole photo; `caption` only fades in behind the caption, for illustrations. */
+	tint?: "full" | "caption";
+	/** Preload the first image, for a slider at the top of the page. */
+	preloadFirst?: boolean;
 }
 
 const AUTOPLAY_MS = 6000;
@@ -33,6 +37,8 @@ export function ImageSlider({
 	sizes = "100vw",
 	className,
 	"aria-label": ariaLabel = "Featured",
+	tint = "full",
+	preloadFirst = false,
 }: ImageSliderProps) {
 	const [active, setActive] = useState(0);
 	const [paused, setPaused] = useState(false);
@@ -75,9 +81,23 @@ export function ImageSlider({
 						i === active ? "opacity-100" : "opacity-0",
 					)}
 				>
-					<Image src={slide.image} alt={slide.alt} fill sizes={sizes} className="object-cover" />
+					<Image
+						src={slide.image}
+						alt={slide.alt}
+						fill
+						sizes={sizes}
+						preload={preloadFirst && i === 0}
+						className="object-cover"
+					/>
 					{/* Brand-colored tint: keeps photos on palette and the caption readable. */}
-					<div className="absolute inset-0 bg-linear-to-t from-primary-10/90 via-primary-10/25 to-primary-10/45" />
+					<div
+						className={cn(
+							"absolute inset-x-0 bottom-0 bg-linear-to-t",
+							tint === "full"
+								? "top-0 from-primary-10/90 via-primary-10/25 to-primary-10/45"
+								: "h-2/5 from-primary-10/85 via-primary-10/40 to-transparent",
+						)}
+					/>
 					<Text variant="label-lg" className="absolute inset-x-4 bottom-9 text-white">
 						{slide.caption}
 					</Text>

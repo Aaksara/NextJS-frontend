@@ -1,5 +1,7 @@
 /** Type styles defined in globals.css. Class names are written in full so Tailwind finds them. */
 export const typeScale = {
+	"display-lg": "text-display-lg",
+	"display-md": "text-display-md",
 	"headline-lg": "text-headline-lg",
 	"headline-md": "text-headline-md",
 	"headline-sm": "text-headline-sm",

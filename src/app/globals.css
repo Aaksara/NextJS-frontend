@@ -97,6 +97,15 @@
 	--accent-foreground: var(--color-neutral-10);
 	--destructive: oklch(0.577 0.245 27.325);
 	--destructive-foreground: oklch(1 0 0);
+	--destructive-container: oklch(0.95 0.03 27);
+	--destructive-container-foreground: oklch(0.45 0.17 27);
+
+	/* Status colors for badges: published, verified, healthy. */
+	--success: oklch(0.55 0.13 152);
+	--success-container: oklch(0.95 0.04 152);
+	--success-container-foreground: oklch(0.36 0.09 152);
+	--warning-container: var(--color-secondary-95);
+	--warning-container-foreground: var(--color-secondary-30);
 	--border: var(--color-neutral-90);
 	--input: var(--color-neutral-80);
 	--ring: var(--color-tertiary-50);
@@ -143,6 +152,14 @@
 	--accent-foreground: var(--color-neutral-90);
 	--destructive: oklch(0.704 0.191 22.216);
 	--destructive-foreground: var(--color-neutral-10);
+	--destructive-container: oklch(0.3 0.08 27);
+	--destructive-container-foreground: oklch(0.9 0.05 27);
+
+	--success: oklch(0.75 0.13 152);
+	--success-container: oklch(0.3 0.06 152);
+	--success-container-foreground: oklch(0.9 0.06 152);
+	--warning-container: var(--color-secondary-30);
+	--warning-container-foreground: var(--color-secondary-90);
 	--border: var(--color-neutral-30);
 	--input: var(--color-neutral-40);
 	--ring: var(--color-tertiary-70);
@@ -185,6 +202,13 @@
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
 	--color-destructive-foreground: var(--destructive-foreground);
+	--color-destructive-container: var(--destructive-container);
+	--color-destructive-container-foreground: var(--destructive-container-foreground);
+	--color-success: var(--success);
+	--color-success-container: var(--success-container);
+	--color-success-container-foreground: var(--success-container-foreground);
+	--color-warning-container: var(--warning-container);
+	--color-warning-container-foreground: var(--warning-container-foreground);
 	--color-border: var(--border);
 	--color-input: var(--input);
 	--color-ring: var(--ring);
@@ -195,11 +219,22 @@
 }
 
 /*
- * Type scale from the design spec: Headline, Body and Label, each in lg/md/sm.
+ * Type scale from the design spec: Headline, Body and Label, each in lg/md/sm, plus Display
+ * (lg/md) for marketing headings.
  * `text-body-md` etc. set size, line height and weight together.
  * Keep the names in sync with src/lib/theme/type-scale.ts.
  */
 @theme {
+	/* Display: marketing headings only, e.g. the landing page hero. */
+	--text-display-lg: 3.25rem;
+	--text-display-lg--line-height: 3.5rem;
+	--text-display-lg--font-weight: 800;
+	--text-display-lg--letter-spacing: -0.02em;
+	--text-display-md: 2.25rem;
+	--text-display-md--line-height: 2.75rem;
+	--text-display-md--font-weight: 700;
+	--text-display-md--letter-spacing: -0.015em;
+
 	--text-headline-lg: 2rem;
 	--text-headline-lg--line-height: 2.5rem;
 	--text-headline-lg--font-weight: 600;

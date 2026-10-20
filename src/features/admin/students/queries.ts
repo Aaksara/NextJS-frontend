@@ -1,0 +1,66 @@
+import {
+	keepPreviousData,
+	skipToken,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { getErrorMessage } from "@/lib/utils/page-helpers";
+
+import { studentService } from "./service";
+import type { StudentQuery } from "./types";
+
+const all = ["admin", "students"] as const;
+
+/** Everything is under `all`, so one invalidation refreshes lists, profiles and totals. */
+const studentKeys = {
+	all,
+	list: (query: StudentQuery) => [...all, "list", query] as const,
+	detail: (id: number | null) => [...all, "detail", id] as const,
+	summary: [...all, "summary"] as const,
+};
+
+export function useStudents(query: StudentQuery) {
+	return useQuery({
+		queryKey: studentKeys.list(query),
+		queryFn: () => studentService.list(query),
+		// Keep showing the current page while the next one loads.
+		placeholderData: keepPreviousData,
+	});
+}
+
+export function useStudent(id: number | null) {
+	return useQuery({
+		queryKey: studentKeys.detail(id),
+		queryFn: id === null ? skipToken : () => studentService.get(id),
+	});
+}
+
+export function useDirectorySummary() {
+	return useQuery({ queryKey: studentKeys.summary, queryFn: studentService.getSummary });
+}
+
+/** A change to one student that refreshes the directory and reports the outcome. */
+function useStudentAction(action: (id: number) => Promise<unknown>, successMessage: string) {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: action,
+		onSuccess: () => toast.success(successMessage),
+		onError: (error) => toast.error(getErrorMessage(error)),
+		onSettled: () => queryClient.invalidateQueries({ queryKey: studentKeys.all }),
+	});
+}
+
+export const useSuspendStudent = () =>
+	useStudentAction(studentService.suspend, "Account suspended and signed out");
+
+export const useReactivateStudent = () =>
+	useStudentAction(studentService.reactivate, "Account reactivated");
+
+export const useVerifyStudentEmail = () =>
+	useStudentAction(studentService.verifyEmail, "Email marked as verified");
+
+export const useResendVerification = () =>
+	useStudentAction(studentService.resendVerification, "Verification email sent");
