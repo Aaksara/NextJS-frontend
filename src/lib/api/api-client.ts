@@ -97,8 +97,12 @@ function toApiError(status: number, data: Record<string, unknown> | null) {
 		if (Array.isArray(value)) fields[key] = value.map(String);
 	}
 	const detail = typeof data?.detail === "string" ? data.detail : undefined;
-	const message =
-		detail ?? fields.non_field_errors?.join(" ") ?? "Please check the highlighted fields.";
+	// A server error has no fields to highlight, and its body is usually an HTML page.
+	const fallback =
+		status >= 500
+			? "Something went wrong on the server. Please try again later."
+			: "Please check the highlighted fields.";
+	const message = detail ?? fields.non_field_errors?.join(" ") ?? fallback;
 	return new ApiRequestError(message, status, fields);
 }
 

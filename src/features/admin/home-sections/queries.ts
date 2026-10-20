@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { refreshHomePage } from "@/features/admin/refresh-home-page";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { homeSectionService } from "./service";
@@ -17,7 +18,8 @@ export function useSaveHomeSections() {
 		mutationFn: homeSectionService.save,
 		onSuccess: (sections) => {
 			queryClient.setQueryData(homeSectionKeys.all, sections);
-			toast.success("Saved. The home page updates within a minute.");
+			toast.success("Saved");
+			return refreshHomePage();
 		},
 		onError: (error) => toast.error(getErrorMessage(error)),
 	});

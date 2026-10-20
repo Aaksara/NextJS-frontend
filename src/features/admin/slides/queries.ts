@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { refreshHomePage } from "@/features/admin/refresh-home-page";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { slideService } from "./service";
@@ -13,8 +14,8 @@ export function useSlides() {
 }
 
 /**
- * Refreshes the slide list after any change. Shows `successMessage` if given, and errors
- * unless a form shows them itself.
+ * Refreshes the slide list and the home page after any change. Shows `successMessage` if
+ * given, and errors unless a form shows them itself.
  */
 function useSlideMutation<Input>(
 	mutationFn: (input: Input) => Promise<unknown>,
@@ -25,6 +26,7 @@ function useSlideMutation<Input>(
 		mutationFn,
 		onSuccess: () => {
 			if (successMessage) toast.success(successMessage);
+			return refreshHomePage();
 		},
 		onError: (error) => {
 			if (toastErrors) toast.error(getErrorMessage(error));

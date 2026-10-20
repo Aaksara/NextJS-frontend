@@ -14,14 +14,17 @@ export type HomeSectionKind = (typeof HOME_SECTIONS)[number];
 
 type ApiSlide = { id: number; caption: string; link: string; image: string; alt_text: string };
 
-/** Admin changes reach the home page within this many seconds. */
+/** Tags the home page's cached content; the admin console clears it after each change. */
+export const HOME_CONTENT_TAG = "home-content";
+
+/** Backstop for changes made outside the console, e.g. in Django's admin. */
 const REVALIDATE_SECONDS = 60;
 
 /**
  * Where this server reaches the API. Usually the public URL, but inside Docker the
  * backend has its own address (e.g. http://backend:8000).
  */
-const SERVER_API_URL = (process.env.API_INTERNAL_URL || API_URL).replace(/\/$/, "");
+export const SERVER_API_URL = (process.env.API_INTERNAL_URL || API_URL).replace(/\/$/, "");
 
 /** The API builds media links from the address it was called on; browsers need the public one. */
 const toPublicUrl = (url: string) =>
@@ -31,13 +34,14 @@ const isHomeSectionKind = (kind: string): kind is HomeSectionKind =>
 	(HOME_SECTIONS as readonly string[]).includes(kind);
 
 /**
- * Public storefront content, cached for `REVALIDATE_SECONDS`. Returns `fallback` when the
- * API cannot be reached, e.g. during a build, so the home page always renders.
+ * Public storefront content, cached until the console changes it (or for
+ * `REVALIDATE_SECONDS`). Returns `fallback` when the API cannot be reached, e.g. during a
+ * build, so the home page always renders.
  */
 async function getPublic<T>(path: string, fallback: T): Promise<T> {
 	try {
 		const response = await fetch(SERVER_API_URL + path, {
-			next: { revalidate: REVALIDATE_SECONDS },
+			next: { tags: [HOME_CONTENT_TAG], revalidate: REVALIDATE_SECONDS },
 		});
 		if (response.ok) return (await response.json()) as T;
 		console.warn(`GET ${path} answered ${response.status}; showing the built-in content.`);
