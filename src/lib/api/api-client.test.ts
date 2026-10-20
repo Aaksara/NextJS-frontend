@@ -91,3 +91,22 @@ describe("requestApi token refresh", () => {
 		expect(tokenStorage.getRefresh()).toBeNull();
 	});
 });
+
+describe("requestApi errors", () => {
+	it("reports a server error as one, not as field errors", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue(new Response("<h1>Server Error (500)</h1>", { status: 500 })),
+		);
+
+		await expect(requestApi("/api/admin/slides/")).rejects.toThrow(
+			"Something went wrong on the server",
+		);
+	});
+
+	it("keeps the API's own message", async () => {
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json(400, { detail: "Not allowed." })));
+
+		await expect(requestApi("/api/x/")).rejects.toThrow("Not allowed.");
+	});
+});

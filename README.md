@@ -82,8 +82,11 @@ src/features/admin/<area>/    one folder per admin area:
 
 The console edits what the storefront shows: the home page (`src/app/page.tsx`) reads the
 published slides and the visible sections, in order, through `src/services/cms.service.ts`.
-It refreshes them every minute, and falls back to the built-in slides and every section when
-the API cannot be reached.
+After each change, the console calls `POST /api/home-page/revalidate`
+(`src/app/api/home-page/revalidate/route.ts`), which checks the caller is the super admin and
+clears the cached content, so the next visit shows the change. The page also refreshes every
+minute on its own, and falls back to the built-in slides and every section when the API
+cannot be reached.
 
 React Query is provided by `src/app/admin/layout.tsx`, so the storefront does not load it.
 The admin session is never "remembered": it ends when the browser closes.
