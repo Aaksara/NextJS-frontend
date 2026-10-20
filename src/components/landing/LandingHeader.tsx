@@ -1,17 +1,18 @@
 import Link from "next/link";
 
 import HeaderActions from "@/components/landing/HeaderActions";
+import { linksTo } from "@/components/landing/section-links";
 import Brand from "@/components/layout/Brand";
 import Container from "@/components/layout/Container";
 import { textVariants } from "@/components/ui/typography";
+import type { HomeSectionKind } from "@/services/cms.service";
 
-const links = [
-	{ href: "#how-it-works", label: "How it works" },
-	{ href: "#sell-swap-donate", label: "Sell, swap, donate" },
-	{ href: "#safety", label: "Safety" },
-];
-
-export default function LandingHeader() {
+export default function LandingHeader({
+	visibleSections,
+}: {
+	visibleSections: readonly HomeSectionKind[];
+}) {
+	const links = linksTo(visibleSections);
 	return (
 		<header className="sticky top-0 z-40 border-b bg-card/80 backdrop-blur">
 			{/* On phones the section links wrap onto a second row under the logo. */}

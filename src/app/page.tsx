@@ -1,3 +1,5 @@
+import { Fragment, type ReactNode } from "react";
+
 import CallToAction from "@/components/landing/CallToAction";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
@@ -6,20 +8,32 @@ import LandingHeader from "@/components/landing/LandingHeader";
 import ListingTypes from "@/components/landing/ListingTypes";
 import SafetySection from "@/components/landing/SafetySection";
 import { SessionProvider } from "@/components/landing/session";
+import { cmsService, type HomeSectionKind } from "@/services/cms.service";
 
-export default function HomePage() {
+/** The sections, slides and their order come from the admin console. */
+export default async function HomePage() {
+	const [sections, slides] = await Promise.all([
+		cmsService.getHomeSections(),
+		cmsService.getHeroSlides(),
+	]);
+	const content: Record<HomeSectionKind, ReactNode> = {
+		hero: <Hero slides={slides} showHowItWorks={sections.includes("how_it_works")} />,
+		how_it_works: <HowItWorks />,
+		listing_types: <ListingTypes />,
+		safety: <SafetySection />,
+		call_to_action: <CallToAction />,
+	};
+
 	return (
 		<SessionProvider>
 			<div className="flex min-h-screen flex-col">
-				<LandingHeader />
+				<LandingHeader visibleSections={sections} />
 				<main className="flex-1">
-					<Hero />
-					<HowItWorks />
-					<ListingTypes />
-					<SafetySection />
-					<CallToAction />
+					{sections.map((kind) => (
+						<Fragment key={kind}>{content[kind]}</Fragment>
+					))}
 				</main>
-				<LandingFooter />
+				<LandingFooter visibleSections={sections} />
 			</div>
 		</SessionProvider>
 	);

@@ -14,7 +14,8 @@ const assurances = [
 	"Meet at approved campus spots",
 ];
 
-const slides: Slide[] = [
+/** Shown until the admin publishes slides of their own. */
+const builtInSlides: Slide[] = [
 	{
 		image: "/images/landing/hero-find.svg",
 		alt: "A phone searching for a course code, with matching textbooks, between library shelves",
@@ -32,7 +33,14 @@ const slides: Slide[] = [
 	},
 ];
 
-export default function Hero() {
+interface HeroProps {
+	/** Slides published in the admin console. */
+	slides: Slide[];
+	/** Hides the "How it works" button when that section is hidden. */
+	showHowItWorks: boolean;
+}
+
+export default function Hero({ slides, showHowItWorks }: HeroProps) {
 	return (
 		<section className="bg-linear-to-b from-primary-container/40 to-background">
 			<Container className="grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
@@ -57,9 +65,11 @@ export default function Hero() {
 								</Link>
 							</Button>
 						</SignedOut>
-						<Button asChild size="lg" variant="outlined" className="rounded-full">
-							<Link href="#how-it-works">How it works</Link>
-						</Button>
+						{showHowItWorks && (
+							<Button asChild size="lg" variant="outlined" className="rounded-full">
+								<Link href="#how-it-works">How it works</Link>
+							</Button>
+						)}
 					</div>
 					<ul className="flex flex-wrap gap-x-6 gap-y-2">
 						{assurances.map((text) => (
@@ -74,7 +84,7 @@ export default function Hero() {
 				</div>
 
 				<ImageSlider
-					slides={slides}
+					slides={slides.length ? slides : builtInSlides}
 					tint="caption"
 					preloadFirst
 					sizes="(min-width: 1024px) 45vw, 100vw"

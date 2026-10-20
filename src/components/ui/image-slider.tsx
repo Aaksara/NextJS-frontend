@@ -7,10 +7,12 @@ import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils/utils";
 
 export interface Slide {
-	/** Path under /public, or a URL allowed by `images.remotePatterns`. */
+	/** Path under /public, or the URL of an image uploaded through the API. */
 	image: string;
 	alt: string;
 	caption: string;
+	/** Makes the caption a link. */
+	href?: string;
 }
 
 interface ImageSliderProps {
@@ -75,7 +77,8 @@ export function ImageSlider({
 			{slides.map((slide, i) => (
 				<div
 					key={slide.image}
-					aria-hidden={i !== active}
+					// Hidden slides are inert, so their links cannot be focused or read out.
+					inert={i !== active}
 					className={cn(
 						"absolute inset-0 transition-opacity duration-700 motion-reduce:transition-none",
 						i === active ? "opacity-100" : "opacity-0",
@@ -85,6 +88,8 @@ export function ImageSlider({
 						src={slide.image}
 						alt={slide.alt}
 						fill
+						// Uploaded images come from the API's storage, which the optimiser does not know.
+						unoptimized={/^https?:/.test(slide.image)}
 						sizes={sizes}
 						preload={preloadFirst && i === 0}
 						className="object-cover"
@@ -99,7 +104,13 @@ export function ImageSlider({
 						)}
 					/>
 					<Text variant="label-lg" className="absolute inset-x-4 bottom-9 text-white">
-						{slide.caption}
+						{slide.href ? (
+							<a href={slide.href} className="underline-offset-4 hover:underline">
+								{slide.caption}
+							</a>
+						) : (
+							slide.caption
+						)}
 					</Text>
 				</div>
 			))}

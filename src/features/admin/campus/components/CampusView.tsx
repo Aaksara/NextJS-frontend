@@ -164,7 +164,6 @@ export default function CampusView() {
 	return (
 		<>
 			<PageHeader
-				trail={["Campus", "Settings"]}
 				title="Campus settings"
 				description="Who can sign up, and where students meet to hand over books."
 			/>

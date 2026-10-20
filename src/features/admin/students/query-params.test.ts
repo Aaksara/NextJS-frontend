@@ -3,25 +3,22 @@ import { describe, expect, it } from "vitest";
 import { studentQueryParams } from "./query-params";
 import type { StudentQuery } from "./types";
 
-const base: StudentQuery = { search: "", verification: "any", account: "any", page: 1 };
+const base: StudentQuery = { search: "", filter: "all", page: 1 };
 
 describe("studentQueryParams", () => {
-	it("leaves out filters set to any", () =>
+	it("lists everyone by default", () =>
 		expect(studentQueryParams(base)).toBe("ordering=-date_joined&page=1&page_size=10"));
 
-	it("maps filters to the API's fields", () => {
-		const params = new URLSearchParams(
-			studentQueryParams({
-				search: " maya ",
-				verification: "unverified",
-				account: "suspended",
-				page: 3,
-			}),
+	it("maps the filter and search to the API's fields", () => {
+		const unverified = new URLSearchParams(
+			studentQueryParams({ search: " maya ", filter: "unverified", page: 3 }),
 		);
-		expect(params.get("search")).toBe("maya");
-		expect(params.get("is_email_verified")).toBe("false");
-		expect(params.get("is_active")).toBe("false");
-		expect(params.get("page")).toBe("3");
+		const suspended = new URLSearchParams(studentQueryParams({ ...base, filter: "suspended" }));
+
+		expect(unverified.get("search")).toBe("maya");
+		expect(unverified.get("is_email_verified")).toBe("false");
+		expect(unverified.get("page")).toBe("3");
+		expect(suspended.get("is_active")).toBe("false");
 	});
 
 	it("drops paging for exports", () =>

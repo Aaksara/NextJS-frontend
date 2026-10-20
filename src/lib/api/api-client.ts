@@ -1,4 +1,7 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
+export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000").replace(
+	/\/$/,
+	"",
+);
 
 const ACCESS_TOKEN_KEY = "aksaraAccessToken";
 const REFRESH_TOKEN_KEY = "aksaraRefreshToken";

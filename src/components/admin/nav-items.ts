@@ -1,4 +1,4 @@
-import { GalleryHorizontal, LayoutTemplate, type LucideIcon, MapPin, Users } from "lucide-react";
+import { House, Images, type LucideIcon, MapPin, Users } from "lucide-react";
 
 interface ConsoleNavItem {
 	href: string;
@@ -7,8 +7,8 @@ interface ConsoleNavItem {
 }
 
 export const consoleNavItems: ConsoleNavItem[] = [
-	{ href: "/admin/components", label: "Component CMS", icon: LayoutTemplate },
-	{ href: "/admin/banners", label: "Sliders & Banners", icon: GalleryHorizontal },
+	{ href: "/admin/students", label: "Students", icon: Users },
+	{ href: "/admin/slides", label: "Homepage slides", icon: Images },
+	{ href: "/admin/home", label: "Home page sections", icon: House },
 	{ href: "/admin/campus", label: "Campus settings", icon: MapPin },
-	{ href: "/admin/students", label: "Student Directory", icon: Users },
 ];

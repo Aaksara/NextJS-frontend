@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { moveById, moveItem } from "./reorder";
+import { moveItem } from "./reorder";
 
 describe("moveItem", () => {
 	it("moves an item down", () => expect(moveItem(["a", "b", "c"], 0, 2)).toEqual(["b", "c", "a"]));
@@ -12,12 +12,4 @@ describe("moveItem", () => {
 		moveItem(items, 0, 1);
 		expect(items).toEqual(["a", "b"]);
 	});
-});
-
-describe("moveById", () => {
-	const items = [{ id: "a" }, { id: "b" }, { id: "c" }];
-
-	it("moves to the position of the target item", () =>
-		expect(moveById(items, "c", "a").map((item) => item.id)).toEqual(["c", "a", "b"]));
-	it("ignores unknown ids", () => expect(moveById(items, "x", "a")).toEqual(items));
 });

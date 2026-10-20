@@ -43,13 +43,12 @@ export interface DirectorySummary {
 	active_buyers: number;
 }
 
-export type VerificationFilter = "any" | "verified" | "unverified";
-export type AccountFilter = "any" | "active" | "suspended";
+/** Which students the directory lists. */
+export type StudentFilter = "all" | "unverified" | "suspended";
 
 export interface StudentQuery {
 	search: string;
-	verification: VerificationFilter;
-	account: AccountFilter;
+	filter: StudentFilter;
 	/** 1-based. */
 	page: number;
 }
