@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import { refreshHomePage } from "@/features/admin/refresh-home-page";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
+import type { SliderKey } from "@/services/cms.service";
 
 import { slideService } from "./service";
 import type { Slide } from "./types";
@@ -53,6 +54,11 @@ export const usePublishSlide = () =>
 export const useDeleteSlide = () =>
 	useSlideMutation(slideService.remove, { successMessage: "Slide deleted" });
 
-/** No success message: the list itself shows the new order. */
+/** Saves one slider's slides in their new order. No success message: the list shows it. */
 export const useReorderSlides = () =>
-	useSlideMutation((ordered: Slide[]) => slideService.reorder(ordered.map((slide) => slide.id)));
+	useSlideMutation(({ slider, ordered }: { slider: SliderKey; ordered: Slide[] }) =>
+		slideService.reorder(
+			slider,
+			ordered.map((slide) => slide.id),
+		),
+	);

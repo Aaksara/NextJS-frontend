@@ -80,8 +80,9 @@ src/features/admin/<area>/    one folder per admin area:
   components/                   the area's UI
 ```
 
-The console edits what the storefront shows: the home page (`src/app/page.tsx`) reads the
-published slides and the visible sections, in order, through `src/services/cms.service.ts`.
+The console edits what the storefront shows: the home page (`src/app/page.tsx`) and the
+auth pages (`src/app/(auth)/layout.tsx`) read their sliders' published slides, and the home
+page its visible sections, in order, through `src/services/cms.service.ts`.
 After each change, the console calls `POST /api/home-page/revalidate`
 (`src/app/api/home-page/revalidate/route.ts`), which checks the caller is the super admin and
 clears the cached content, so the next visit shows the change. The page also refreshes every

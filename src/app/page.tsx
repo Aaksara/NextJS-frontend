@@ -12,15 +12,16 @@ import { cmsService, type HomeSectionKind } from "@/services/cms.service";
 
 /** The sections, slides and their order come from the admin console. */
 export default async function HomePage() {
-	const [sections, slides] = await Promise.all([
+	const [sections, heroSlides, safetySlides] = await Promise.all([
 		cmsService.getHomeSections(),
-		cmsService.getHeroSlides(),
+		cmsService.getSlides("home_hero"),
+		cmsService.getSlides("home_safety"),
 	]);
 	const content: Record<HomeSectionKind, ReactNode> = {
-		hero: <Hero slides={slides} showHowItWorks={sections.includes("how_it_works")} />,
+		hero: <Hero slides={heroSlides} showHowItWorks={sections.includes("how_it_works")} />,
 		how_it_works: <HowItWorks />,
 		listing_types: <ListingTypes />,
-		safety: <SafetySection />,
+		safety: <SafetySection slides={safetySlides} />,
 		call_to_action: <CallToAction />,
 	};
 

@@ -3,7 +3,7 @@ import type { HomeSectionKind } from "@/services/cms.service";
 export const sectionInfo: Record<HomeSectionKind, { label: string; description: string }> = {
 	hero: {
 		label: "Hero",
-		description: "Headline, sign-up button and the homepage slides.",
+		description: "Headline, sign-up button and the home page's top slider.",
 	},
 	how_it_works: {
 		label: "How it works",
