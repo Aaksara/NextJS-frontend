@@ -18,6 +18,10 @@ export const slideService = {
 
 	remove: (id: number) => requestApi(`${SLIDES}${id}/`, { method: "DELETE" }),
 
+	/** Gives an empty slider the site's built-in slides, ready to edit. */
+	addDefaults: (slider: SliderKey) =>
+		requestApi<Slide[]>(`${SLIDES}add-defaults/`, { body: { slider } }),
+
 	/** Saves one slider's order. `ids` must contain each of its slides exactly once. */
 	reorder: (slider: SliderKey, ids: number[]) =>
 		requestApi<Slide[]>(`${SLIDES}reorder/`, { body: { slider, ids } }),

@@ -15,7 +15,7 @@ import { moveItem } from "@/lib/utils/reorder";
 import type { SliderKey } from "@/services/cms.service";
 
 import { sliders } from "../constants";
-import { usePublishSlide, useReorderSlides, useSlides } from "../queries";
+import { useAddDefaultSlides, usePublishSlide, useReorderSlides, useSlides } from "../queries";
 import type { Slide } from "../types";
 import SlideFormDialog from "./SlideFormDialog";
 
@@ -27,6 +27,7 @@ interface SliderCardProps {
 	description: string;
 	slides: Slide[];
 	onAdd: () => void;
+	onAddDefaults: () => void;
 	onEdit: (slide: Slide) => void;
 	onMove: (ordered: Slide[]) => void;
 	onPublish: (slide: Slide, is_published: boolean) => void;
@@ -39,6 +40,7 @@ function SliderCard({
 	description,
 	slides,
 	onAdd,
+	onAddDefaults,
 	onEdit,
 	onMove,
 	onPublish,
@@ -61,9 +63,14 @@ function SliderCard({
 				</Button>
 			</div>
 			{slides.length === 0 ? (
-				<Text variant="body-sm" tone="muted" className="p-4">
-					No slides yet, so the site shows its built-in pictures here.
-				</Text>
+				<div className="flex flex-wrap items-center justify-between gap-3 p-4">
+					<Text variant="body-sm" tone="muted">
+						No slides yet, so the site shows its built-in pictures here.
+					</Text>
+					<Button variant="secondary" size="sm" onClick={onAddDefaults} disabled={busy}>
+						Add the built-in slides to edit
+					</Button>
+				</div>
 			) : (
 				<ol className="divide-y">
 					{slides.map((slide, index) => (
@@ -143,8 +150,9 @@ export default function SlidesView() {
 	const query = useSlides();
 	const publish = usePublishSlide();
 	const reorder = useReorderSlides();
+	const addDefaults = useAddDefaultSlides();
 	const [editing, setEditing] = useState<Editing>(null);
-	const busy = publish.isPending || reorder.isPending;
+	const busy = publish.isPending || reorder.isPending || addDefaults.isPending;
 
 	return (
 		<>
@@ -162,6 +170,7 @@ export default function SlidesView() {
 						description={description}
 						slides={query.data.filter((slide) => slide.slider === key)}
 						onAdd={() => setEditing({ slider: key })}
+						onAddDefaults={() => addDefaults.mutate(key)}
 						onEdit={(slide) => setEditing({ slider: key, slide })}
 						onMove={(ordered) => reorder.mutate({ slider: key, ordered })}
 						onPublish={(slide, is_published) => publish.mutate({ id: slide.id, is_published })}

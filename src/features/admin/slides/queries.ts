@@ -54,6 +54,9 @@ export const usePublishSlide = () =>
 export const useDeleteSlide = () =>
 	useSlideMutation(slideService.remove, { successMessage: "Slide deleted" });
 
+export const useAddDefaultSlides = () =>
+	useSlideMutation(slideService.addDefaults, { successMessage: "Built-in slides added" });
+
 /** Saves one slider's slides in their new order. No success message: the list shows it. */
 export const useReorderSlides = () =>
 	useSlideMutation(({ slider, ordered }: { slider: SliderKey; ordered: Slide[] }) =>
