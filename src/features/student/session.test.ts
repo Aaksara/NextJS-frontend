@@ -1,18 +1,24 @@
 import { describe, expect, it } from "vitest";
 
-import { safeStudentPath } from "./session";
+import { safeReturnPath } from "./session";
 
-describe("safeStudentPath", () => {
+describe("safeReturnPath", () => {
 	it("keeps paths inside the portal", () => {
-		expect(safeStudentPath("/student")).toBe("/student");
-		expect(safeStudentPath("/student/listings")).toBe("/student/listings");
+		expect(safeReturnPath("/student")).toBe("/student");
+		expect(safeReturnPath("/student/listings")).toBe("/student/listings");
+	});
+
+	it("keeps the browse pages, so a visitor returns to the book they wanted", () => {
+		expect(safeReturnPath("/browse")).toBe("/browse");
+		expect(safeReturnPath("/browse/12")).toBe("/browse/12");
 	});
 
 	it("falls back to the overview for anything else", () => {
-		expect(safeStudentPath(null)).toBe("/student");
-		expect(safeStudentPath("https://evil.example")).toBe("/student");
-		expect(safeStudentPath("//evil.example/student")).toBe("/student");
-		expect(safeStudentPath("/students-elsewhere")).toBe("/student");
-		expect(safeStudentPath("/admin")).toBe("/student");
+		expect(safeReturnPath(null)).toBe("/student");
+		expect(safeReturnPath("https://evil.example")).toBe("/student");
+		expect(safeReturnPath("//evil.example/student")).toBe("/student");
+		expect(safeReturnPath("/students-elsewhere")).toBe("/student");
+		expect(safeReturnPath("/admin")).toBe("/student");
+		expect(safeReturnPath("/browser")).toBe("/student");
 	});
 });

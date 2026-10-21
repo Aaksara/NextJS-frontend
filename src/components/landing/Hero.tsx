@@ -1,4 +1,4 @@
-import { ArrowRight, BadgeCheck, CircleCheck } from "lucide-react";
+import { ArrowRight, BadgeCheck, CircleCheck, Search } from "lucide-react";
 import Link from "next/link";
 
 import type { HomeContent } from "@/components/landing/content";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ImageSlider, type Slide } from "@/components/ui/image-slider";
 import { Text } from "@/components/ui/typography";
+import { BROWSE } from "@/features/browse/routes";
 
 /** Shown until the admin publishes slides of their own. */
 const builtInSlides: Slide[] = [
@@ -51,8 +52,14 @@ export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 						{content.description}
 					</Text>
 					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+						<Button asChild size="lg" className="rounded-full">
+							<Link href={BROWSE}>
+								<Search />
+								Browse books
+							</Link>
+						</Button>
 						<SignedOut>
-							<Button asChild size="lg" className="rounded-full">
+							<Button asChild size="lg" variant="outlined" className="rounded-full">
 								<Link href="/register">
 									Create your account
 									<ArrowRight />
@@ -60,7 +67,7 @@ export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 							</Button>
 						</SignedOut>
 						{showHowItWorks && (
-							<Button asChild size="lg" variant="outlined" className="rounded-full">
+							<Button asChild size="lg" variant="ghost" className="rounded-full text-foreground">
 								<Link href="#how-it-works">How it works</Link>
 							</Button>
 						)}

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils/utils";
 import type { Listing } from "../types";
 
 /** The seller's first photo of the copy, else the edition's catalogue cover. */
-export function coverOf(listing: Listing) {
+export function coverOf(listing: Pick<Listing, "images" | "book">) {
 	return listing.images[0]?.image || listing.book.cover_url;
 }
 

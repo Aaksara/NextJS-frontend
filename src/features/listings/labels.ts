@@ -31,6 +31,14 @@ export const listingTypeLabels: Record<ListingType, string> = {
 	donate: "Donation",
 };
 
+/** Filter chips for browsing listings by type. */
+export const listingTypeFilters: { value: ListingType | ""; label: string }[] = [
+	{ value: "", label: "All" },
+	{ value: "sell", label: "For sale" },
+	{ value: "exchange", label: "Swaps" },
+	{ value: "donate", label: "Free" },
+];
+
 /** The asking price, or "Swap" / "Donation" for listings that have none. */
 export function listingPrice(listing: { price: string | null; listing_type: ListingType }) {
 	return listing.price === null

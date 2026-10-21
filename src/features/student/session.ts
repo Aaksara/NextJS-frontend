@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { sessionKey } from "@/components/providers/QueryProvider";
+import { BROWSE } from "@/features/browse/routes";
 import { authService } from "@/services/auth.service";
 
 import { STUDENT_HOME } from "./routes";
@@ -38,10 +39,12 @@ export function useStudentSignOut() {
 }
 
 /**
- * Where to go after signing in. Only portal paths are accepted, so a crafted
+ * Where to go after signing in. Only portal and browse paths are accepted, so a crafted
  * `?next=https://evil.example` link cannot send the student off-site.
  */
-export function safeStudentPath(next: string | null) {
-	if (next === STUDENT_HOME || next?.startsWith(`${STUDENT_HOME}/`)) return next;
-	return STUDENT_HOME;
+export function safeReturnPath(next: string | null) {
+	const allowed = [STUDENT_HOME, BROWSE].some(
+		(root) => next === root || next?.startsWith(`${root}/`),
+	);
+	return next && allowed ? next : STUDENT_HOME;
 }

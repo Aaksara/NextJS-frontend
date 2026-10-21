@@ -8,7 +8,7 @@ import type { Listing } from "../types";
 import BookCover, { coverOf } from "./BookCover";
 
 interface ListingCardProps {
-	listing: Listing;
+	listing: Omit<Listing, "seller">;
 	/** Over the cover's top right corner, e.g. the listing's status. */
 	badge?: ReactNode;
 	/** Under the price, e.g. a person's name or a hint. */

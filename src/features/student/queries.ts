@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { listingsKey } from "@/features/listings/keys";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { studentService } from "./service";
@@ -13,7 +14,7 @@ import type {
 	MyListingQuery,
 } from "./types";
 
-const listings = ["student", "listings"] as const;
+const listings = listingsKey;
 const exchanges = ["student", "exchanges"] as const;
 
 /**

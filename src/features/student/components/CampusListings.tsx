@@ -11,6 +11,7 @@ import { FilterChips } from "@/components/ui/filter-chips";
 import { Pagination } from "@/components/ui/pagination";
 import { SearchInput } from "@/components/ui/search-input";
 import { Text } from "@/components/ui/typography";
+import { listingTypeFilters } from "@/features/listings/labels";
 import type { ListingType } from "@/features/listings/types";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { usePageInRange } from "@/hooks/use-page-in-range";
@@ -22,13 +23,6 @@ import { STUDENT_LISTINGS } from "../routes";
 import type { ViewerListing } from "../types";
 import ListingCard from "./ListingCard";
 import RequestDialog from "./RequestDialog";
-
-const typeFilters: { value: ListingType | ""; label: string }[] = [
-	{ value: "", label: "All" },
-	{ value: "sell", label: "For sale" },
-	{ value: "exchange", label: "Swaps" },
-	{ value: "donate", label: "Free" },
-];
 
 /** Every available book on campus, to search and request. */
 export default function CampusListings() {
@@ -59,7 +53,7 @@ export default function CampusListings() {
 				<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
 					<FilterChips
 						label="Listing type"
-						options={typeFilters}
+						options={listingTypeFilters}
 						value={listingType}
 						onChange={(value) => {
 							setListingType(value);
