@@ -8,7 +8,6 @@ import {
 } from "./constants";
 import { exchangeGroupFilters } from "./exchanges";
 import type {
-	AcceptInput,
 	Exchange,
 	ExchangeGroup,
 	ExchangeInput,
@@ -16,7 +15,6 @@ import type {
 	ListingChanges,
 	ListingInput,
 	ListingQuery,
-	MeetupLocation,
 	MyListingQuery,
 	ViewerListing,
 } from "./types";
@@ -41,8 +39,8 @@ async function countOf(endpoint: string, filters: Record<string, string>) {
 	return page.count;
 }
 
-const exchangeAction = (id: number, name: string, body?: object) =>
-	requestApi<Exchange>(`${EXCHANGES}${id}/${name}/`, { method: "POST", body });
+const exchangeAction = (id: number, name: string) =>
+	requestApi<Exchange>(`${EXCHANGES}${id}/${name}/`, { method: "POST" });
 
 export const studentService = {
 	/** Available listings from everyone, the student's own included. */
@@ -83,8 +81,8 @@ export const studentService = {
 
 	requestListing: (input: ExchangeInput) => requestApi<Exchange>(EXCHANGES, { body: input }),
 
-	/** Seller only. Reserves the book and sets where and when to meet. */
-	accept: (id: number, input: AcceptInput) => exchangeAction(id, "accept", input),
+	/** Seller only. Reserves the book; the two students then arrange the handover. */
+	accept: (id: number) => exchangeAction(id, "accept"),
 
 	/** Seller only, while pending. */
 	reject: (id: number) => exchangeAction(id, "reject"),
@@ -94,6 +92,4 @@ export const studentService = {
 
 	/** Either side, after the handover. */
 	complete: (id: number) => exchangeAction(id, "complete"),
-
-	meetupLocations: () => requestApi<MeetupLocation[]>("/api/meetup-locations/"),
 };

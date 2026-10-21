@@ -1,12 +1,13 @@
 import type { Exchange, ExchangeGroup } from "./types";
 
 /**
- * The API filters behind each group: requests for the student's books to answer, agreed
- * meetups on either side (soonest first), and the student's own requests awaiting a reply.
+ * The API filters behind each group: requests for the student's books to answer, accepted
+ * exchanges on either side waiting for the handover, and the student's own requests awaiting
+ * a reply.
  */
 export const exchangeGroupFilters: Record<ExchangeGroup, Record<string, string>> = {
 	review: { role: "seller", status: "pending" },
-	meetups: { status: "accepted", ordering: "meetup_time" },
+	accepted: { status: "accepted", ordering: "-responded_at" },
 	sent: { role: "requester", status: "pending" },
 };
 

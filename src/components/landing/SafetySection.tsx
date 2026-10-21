@@ -24,7 +24,7 @@ const builtInSlides: Slide[] = [
 	{
 		image: "/images/landing/safety-meetup.svg",
 		alt: "Two students meeting outside a campus library marked with a map pin",
-		caption: "Meet at approved campus spots",
+		caption: "Hand books over in person",
 	},
 	{
 		image: "/images/landing/safety-verified.svg",

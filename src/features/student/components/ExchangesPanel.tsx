@@ -23,10 +23,10 @@ const groupInfo: Record<ExchangeGroup, { label: string; empty: string; hint: str
 		empty: "No requests to review",
 		hint: "When someone asks for one of your books, you accept or decline it here.",
 	},
-	meetups: {
-		label: "Meetups",
-		empty: "No meetups planned",
-		hint: "Accepted exchanges show here with where and when to meet.",
+	accepted: {
+		label: "Accepted",
+		empty: "Nothing waiting to change hands",
+		hint: "Accepted requests show here until the book is handed over. Agree where to meet in the chat.",
 	},
 	sent: {
 		label: "Sent",
@@ -35,11 +35,11 @@ const groupInfo: Record<ExchangeGroup, { label: string; empty: string; hint: str
 	},
 };
 
-/** Requests for the student's books, agreed meetups, and the student's own requests. */
+/** Requests for the student's books, accepted exchanges, and the student's own requests. */
 export default function ExchangesPanel() {
 	const counts: Record<ExchangeGroup, number | undefined> = {
 		review: useExchangeCount("review").data,
-		meetups: useExchangeCount("meetups").data,
+		accepted: useExchangeCount("accepted").data,
 		sent: useExchangeCount("sent").data,
 	};
 	const groups = Object.keys(groupInfo) as ExchangeGroup[];

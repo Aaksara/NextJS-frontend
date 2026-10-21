@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-	formatCount,
-	formatCurrency,
-	formatNumber,
-	formatRelativeTime,
-	toDateTimeInputValue,
-} from "./format";
+import { formatCount, formatCurrency, formatNumber, formatRelativeTime } from "./format";
 
 describe("formatRelativeTime", () => {
 	const now = new Date("2026-10-20T12:00:00Z");
@@ -29,13 +23,6 @@ describe("number formats", () => {
 		[99.5, "Rs. 99.50"],
 	])("formats %s rupees as %s", (value, expected) => {
 		expect(formatCurrency(value)).toBe(expected);
-	});
-});
-
-describe("toDateTimeInputValue", () => {
-	it("is the local time, to the minute", () => {
-		const date = new Date(2026, 9, 21, 14, 30, 45);
-		expect(toDateTimeInputValue(date)).toBe("2026-10-21T14:30");
 	});
 });
 

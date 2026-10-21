@@ -16,7 +16,7 @@ import { CURRENCY_SYMBOL } from "@/lib/utils/format";
 import { readForm } from "@/lib/utils/page-helpers";
 
 import { type FieldErrors, reportFormError } from "../form-errors";
-import { useCreateListing, useMeetupLocations, useUpdateListing } from "../queries";
+import { useCreateListing, useUpdateListing } from "../queries";
 import type { Listing, ListingInput } from "../types";
 
 const conditions = Object.entries(conditionLabels) as [Condition, string][];
@@ -53,7 +53,6 @@ export default function ListingFormDialog({ open, onClose, listing }: ListingFor
 function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => void }) {
 	const create = useCreateListing();
 	const update = useUpdateListing();
-	const locations = useMeetupLocations();
 	const [errors, setErrors] = useState<FieldErrors>({});
 	const [listingType, setListingType] = useState<ListingType>(listing?.listing_type ?? "sell");
 	const pending = create.isPending || update.isPending;
@@ -69,7 +68,6 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 			"condition",
 			"price",
 			"course_code",
-			"location",
 			"description",
 		);
 		const input: ListingInput = {
@@ -80,7 +78,6 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 			listing_type: listingType,
 			price: listingType === "sell" ? form.price : null,
 			course_code: form.course_code.trim(),
-			preferred_location: form.location ? Number(form.location) : null,
 			description: form.description.trim(),
 		};
 		const options = { onSuccess: onDone, onError: reportFormError(setErrors) };
@@ -184,25 +181,6 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 							placeholder="MGT 201"
 							defaultValue={listing?.course_code}
 						/>
-					</Field>
-					<Field
-						htmlFor="listing-location"
-						label="Preferred meetup spot"
-						errors={errors.preferred_location}
-					>
-						<Select
-							id="listing-location"
-							name="location"
-							defaultValue={listing?.preferred_location ?? ""}
-							disabled={!locations.data}
-						>
-							<option value="">No preference</option>
-							{locations.data?.map((location) => (
-								<option key={location.id} value={location.id}>
-									{location.name}
-								</option>
-							))}
-						</Select>
 					</Field>
 				</div>
 

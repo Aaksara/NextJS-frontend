@@ -38,7 +38,6 @@ export interface Listing {
 	price: string | null;
 	description: string;
 	course_code: string;
-	preferred_location: number | null;
 	status: ListingStatus;
 	images: ListingImage[];
 	created_at: string;
@@ -63,7 +62,6 @@ export interface ListingInput {
 	listing_type: ListingType;
 	price: string | null;
 	course_code: string;
-	preferred_location: number | null;
 	description: string;
 }
 
@@ -84,12 +82,6 @@ export interface MyListingQuery {
 	page: number;
 }
 
-export interface MeetupLocation {
-	id: number;
-	name: string;
-	description: string;
-}
-
 export type ExchangeStatus = "pending" | "accepted" | "rejected" | "cancelled" | "completed";
 
 export interface Exchange {
@@ -103,8 +95,8 @@ export interface Exchange {
 	offered_listing_detail: Listing | null;
 	message: string;
 	status: ExchangeStatus;
-	meetup_location_detail: MeetupLocation | null;
-	meetup_time: string | null;
+	/** The other student's details while the exchange is accepted, to arrange the handover. */
+	contact: { email: string; phone: string } | null;
 	responded_at: string | null;
 	completed_at: string | null;
 	created_at: string;
@@ -120,16 +112,10 @@ export interface ExchangeInput {
 }
 
 /** The overview's exchange tabs, by what the student has to do. */
-export type ExchangeGroup = "review" | "meetups" | "sent";
+export type ExchangeGroup = "review" | "accepted" | "sent";
 
 export interface ExchangeQuery {
 	group: ExchangeGroup;
 	/** 1-based. */
 	page: number;
-}
-
-export interface AcceptInput {
-	meetup_location: number;
-	/** ISO 8601, in the future. */
-	meetup_time: string;
 }

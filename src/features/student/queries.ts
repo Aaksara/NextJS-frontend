@@ -5,7 +5,6 @@ import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { studentService } from "./service";
 import type {
-	AcceptInput,
 	ExchangeGroup,
 	ExchangeQuery,
 	ListingChanges,
@@ -31,7 +30,6 @@ const studentKeys = {
 	exchangePage: (query: ExchangeQuery) => [...exchanges, "page", query] as const,
 	exchangeCount: (group: ExchangeGroup) => [...exchanges, "count", group] as const,
 	completedCount: [...exchanges, "completed-count"] as const,
-	meetupLocations: ["student", "meetup-locations"] as const,
 };
 
 export function useBrowseListings(query: ListingQuery) {
@@ -85,15 +83,6 @@ export function useCompletedExchangeCount() {
 	return useQuery({
 		queryKey: studentKeys.completedCount,
 		queryFn: studentService.completedExchangeCount,
-	});
-}
-
-export function useMeetupLocations() {
-	return useQuery({
-		queryKey: studentKeys.meetupLocations,
-		queryFn: studentService.meetupLocations,
-		// Admins rarely change the spots.
-		staleTime: 10 * 60_000,
 	});
 }
 
@@ -156,17 +145,6 @@ export function useRequestListing() {
 	});
 }
 
-/** Accepts a request. Errors are left to the form. */
-export function useAcceptExchange() {
-	const refresh = useRefreshExchanges();
-	return useMutation({
-		mutationFn: ({ id, input }: { id: number; input: AcceptInput }) =>
-			studentService.accept(id, input),
-		onSuccess: () => toast.success("Request accepted and meetup set"),
-		onSettled: refresh,
-	});
-}
-
 function useExchangeAction(action: (id: number) => Promise<unknown>, successMessage: string) {
 	const refresh = useRefreshExchanges();
 	return useMutation({
@@ -176,6 +154,9 @@ function useExchangeAction(action: (id: number) => Promise<unknown>, successMess
 		onSettled: refresh,
 	});
 }
+
+export const useAcceptExchange = () =>
+	useExchangeAction(studentService.accept, "Request accepted. The book is reserved for them.");
 
 export const useRejectExchange = () => useExchangeAction(studentService.reject, "Request declined");
 

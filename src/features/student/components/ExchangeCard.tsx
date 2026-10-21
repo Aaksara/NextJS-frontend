@@ -1,20 +1,24 @@
 "use client";
 
-import { CalendarClock, MapPin } from "lucide-react";
-import { useState } from "react";
+import { MessageCircle } from "lucide-react";
 
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
+import { useOpenExchangeChat } from "@/features/chat/queries";
 import { conditionLabels } from "@/features/listings/labels";
-import { formatCurrency, formatDateTime, formatRelativeTime } from "@/lib/utils/format";
+import { formatCurrency, formatRelativeTime } from "@/lib/utils/format";
 
 import { exchangeStatusLabels, exchangeStatusTones } from "../constants";
 import { counterpart } from "../exchanges";
-import { useCancelExchange, useCompleteExchange, useRejectExchange } from "../queries";
+import {
+	useAcceptExchange,
+	useCancelExchange,
+	useCompleteExchange,
+	useRejectExchange,
+} from "../queries";
 import type { Exchange } from "../types";
-import AcceptDialog from "./AcceptDialog";
 import BookCover, { coverOf } from "./BookCover";
 
 /** What the requester gives: money, a book of theirs, or nothing for donations. */
@@ -33,7 +37,7 @@ function offerOf(exchange: Exchange) {
 }
 
 export default function ExchangeCard({ exchange }: { exchange: Exchange }) {
-	const { listing_detail: listing, meetup_location_detail: location } = exchange;
+	const { listing_detail: listing } = exchange;
 	const other = counterpart(exchange);
 	const isSeller = exchange.role === "seller";
 
@@ -73,25 +77,13 @@ export default function ExchangeCard({ exchange }: { exchange: Exchange }) {
 					</Text>
 				)}
 
-				{exchange.status === "accepted" && location && exchange.meetup_time && (
-					<dl className="grid gap-2 rounded-lg bg-success-container px-3 py-2.5 text-success-container-foreground sm:grid-cols-2">
-						<div className="flex items-center gap-2">
-							<dt>
-								<MapPin aria-label="Where" className="size-4" />
-							</dt>
-							<Text as="dd" variant="label-md">
-								{location.name}
-							</Text>
-						</div>
-						<div className="flex items-center gap-2">
-							<dt>
-								<CalendarClock aria-label="When" className="size-4" />
-							</dt>
-							<Text as="dd" variant="label-md">
-								{formatDateTime(exchange.meetup_time)}
-							</Text>
-						</div>
-					</dl>
+				{exchange.status === "accepted" && (
+					<Text
+						variant="body-sm"
+						className="rounded-lg bg-success-container px-3 py-2.5 text-success-container-foreground"
+					>
+						Agree with {other.full_name} in the chat where and when to hand the book over on campus.
+					</Text>
 				)}
 
 				<ExchangeActions exchange={exchange} />
@@ -100,8 +92,24 @@ export default function ExchangeCard({ exchange }: { exchange: Exchange }) {
 	);
 }
 
+function ChatButton({ exchange }: { exchange: Exchange }) {
+	const openChat = useOpenExchangeChat();
+	return (
+		<Button
+			variant="outlined"
+			size="sm"
+			className="mr-auto"
+			onClick={() => openChat.mutate(exchange.id)}
+			disabled={openChat.isPending}
+		>
+			<MessageCircle />
+			Chat
+		</Button>
+	);
+}
+
 function ExchangeActions({ exchange }: { exchange: Exchange }) {
-	const [accepting, setAccepting] = useState(false);
+	const accept = useAcceptExchange();
 	const reject = useRejectExchange();
 	const cancel = useCancelExchange();
 	const complete = useCompleteExchange();
@@ -110,7 +118,7 @@ function ExchangeActions({ exchange }: { exchange: Exchange }) {
 
 	if (exchange.status === "accepted") {
 		const confirmCancel = () => {
-			const message = `Cancel the meetup with ${other}? ${title} goes back on the shelf.`;
+			const message = `Cancel the exchange with ${other}? ${title} goes back on the shelf.`;
 			if (window.confirm(message)) cancel.mutate(exchange.id);
 		};
 		const confirmComplete = () => {
@@ -119,8 +127,9 @@ function ExchangeActions({ exchange }: { exchange: Exchange }) {
 		};
 		return (
 			<div className="flex flex-wrap justify-end gap-2">
+				<ChatButton exchange={exchange} />
 				<Button variant="ghost" size="sm" onClick={confirmCancel} disabled={cancel.isPending}>
-					Cancel meetup
+					Cancel exchange
 				</Button>
 				<Button size="sm" onClick={confirmComplete} disabled={complete.isPending}>
 					Mark as handed over
@@ -131,7 +140,8 @@ function ExchangeActions({ exchange }: { exchange: Exchange }) {
 
 	if (exchange.role === "requester") {
 		return (
-			<div className="flex justify-end">
+			<div className="flex flex-wrap justify-end gap-2">
+				<ChatButton exchange={exchange} />
 				<Button
 					variant="ghost"
 					size="sm"
@@ -147,25 +157,27 @@ function ExchangeActions({ exchange }: { exchange: Exchange }) {
 	const confirmReject = () => {
 		if (window.confirm(`Decline ${other}'s request for ${title}?`)) reject.mutate(exchange.id);
 	};
-	// Another request was accepted first. This one can wait in case that meetup is cancelled.
+	const confirmAccept = () => {
+		const message = `Accept ${other}'s request? ${title} is reserved for them, and you agree in the chat where and when to meet.`;
+		if (window.confirm(message)) accept.mutate(exchange.id);
+	};
+	// Another request was accepted first. This one can wait in case that exchange is cancelled.
 	const reserved = exchange.listing_detail.status !== "available";
 	return (
 		<div className="flex flex-wrap items-center justify-end gap-2">
+			<ChatButton exchange={exchange} />
 			{reserved && (
-				<Text variant="body-sm" tone="muted" className="mr-auto">
-					Reserved for another meetup.
+				<Text variant="body-sm" tone="muted">
+					Reserved for another student.
 				</Text>
 			)}
 			<Button variant="outlined" size="sm" onClick={confirmReject} disabled={reject.isPending}>
 				Decline
 			</Button>
 			{!reserved && (
-				<>
-					<Button size="sm" onClick={() => setAccepting(true)}>
-						Accept
-					</Button>
-					<AcceptDialog exchange={exchange} open={accepting} onClose={() => setAccepting(false)} />
-				</>
+				<Button size="sm" onClick={confirmAccept} disabled={accept.isPending}>
+					Accept
+				</Button>
 			)}
 		</div>
 	);

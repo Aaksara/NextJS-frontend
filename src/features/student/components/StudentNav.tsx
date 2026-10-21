@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { useUnreadCount } from "@/features/chat/queries";
 import { cn } from "@/lib/utils/utils";
 
 import { studentNavItems } from "../constants";
-import { STUDENT_HOME } from "../routes";
+import { STUDENT_HOME, STUDENT_MESSAGES } from "../routes";
 
 function isActive(pathname: string, href: string) {
 	// The overview is the portal's root, so it would otherwise match every page.
@@ -16,10 +17,11 @@ function isActive(pathname: string, href: string) {
 
 export default function StudentNav({ className }: { className?: string }) {
 	const pathname = usePathname();
+	const unread = useUnreadCount().data ?? 0;
 
 	return (
 		<nav aria-label="Portal" className={className}>
-			<ul className="flex gap-1">
+			<ul className="flex gap-1 overflow-x-auto">
 				{studentNavItems.map(({ href, label, icon: Icon }) => {
 					const active = isActive(pathname, href);
 					return (
@@ -34,8 +36,21 @@ export default function StudentNav({ className }: { className?: string }) {
 										: "text-muted-foreground hover:bg-muted hover:text-foreground",
 								)}
 							>
-								<Icon aria-hidden className="size-4" />
+								<Icon aria-hidden className="hidden size-4 sm:block" />
 								{label}
+								{href === STUDENT_MESSAGES && unread > 0 && (
+									<span
+										className={cn(
+											"min-w-5 rounded-full px-1.5 text-center text-label-sm tabular-nums",
+											active
+												? "bg-primary-foreground text-primary"
+												: "bg-primary text-primary-foreground",
+										)}
+									>
+										<span className="sr-only">, unread: </span>
+										{unread}
+									</span>
+								)}
 							</Link>
 						</li>
 					);

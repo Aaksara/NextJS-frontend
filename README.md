@@ -41,6 +41,7 @@ src/components/feedback/     loading, error and empty states
 src/components/providers/    QueryProvider (React Query) for the signed-in areas
 src/features/admin/         admin console areas (see below)
 src/features/student/       student portal (see below)
+src/features/chat/          buyer-seller messages, used by the portal
 src/features/listings/      listing vocabulary shared by both: conditions, statuses, labels
 src/hooks/                  shared React hooks
 public/                     icons and built-in slide images
@@ -104,10 +105,15 @@ The admin session is never "remembered": it ends when the browser closes.
 Students land on `/student` after signing in (`?next=` may send them to another portal
 page; the super admin goes to `/admin`). Signed-out visitors are sent to `/login`.
 
-- `/student`: profile and totals, exchanges to review, agreed meetups and sent requests,
-  the approved meetup spots, and every available book on campus to search and request.
+- `/student`: profile and totals, exchanges to review, accepted exchanges and sent
+  requests, and every available book on campus to search and request.
 - `/student/listings`: the student's own listings by status. List a book by its title,
   author and edition (most local textbooks have no ISBN), edit, withdraw and relist.
+
+- `/student/messages`: chats between buyers and sellers, where they agree where and when
+  to hand a book over. Each exchange card opens its chat. The API has no push, so open
+  chats poll every few seconds and the inbox and unread badge less often
+  (`src/features/chat/constants.ts`).
 
 Prices are in Nepali rupees: `formatCurrency` in `src/lib/utils/format.ts` writes them as
 "Rs. 1,00,000".

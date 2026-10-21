@@ -138,10 +138,10 @@ function OwnListing({ listing }: { listing: Listing }) {
 				</Button>
 			</>
 		),
-		// An accepted exchange holds the book; it is managed from the meetup.
+		// An accepted exchange holds the book; it is managed from the overview.
 		reserved: (
 			<Button asChild size="sm" variant="secondary">
-				<Link href={STUDENT_HOME}>View meetup</Link>
+				<Link href={STUDENT_HOME}>View exchange</Link>
 			</Button>
 		),
 		completed: (

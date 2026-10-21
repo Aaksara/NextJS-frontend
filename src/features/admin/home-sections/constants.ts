@@ -15,7 +15,7 @@ export const sectionInfo: Record<HomeSectionKind, { label: string; description: 
 	},
 	safety: {
 		label: "Safety",
-		description: "Verified students and approved meetup spots.",
+		description: "Verified students and in-person handovers.",
 	},
 	call_to_action: {
 		label: "Call to action",

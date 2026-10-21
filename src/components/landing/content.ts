@@ -47,11 +47,11 @@ export const builtInHomeContent: HomeContent = {
 		eyebrow: "Student-to-student textbook exchange",
 		title: "Buy, swap and donate textbooks on campus.",
 		description:
-			"Pass on the books from last semester and find the ones you need for the next. Meet a fellow student at an approved spot on campus to hand them over.",
+			"Pass on the books from last semester and find the ones you need for the next. Meet a fellow student on campus to hand them over.",
 		items: [
 			{ title: "University email required" },
 			{ title: "Sell, swap or donate" },
-			{ title: "Meet at approved campus spots" },
+			{ title: "Hand books over in person" },
 		],
 	},
 	how_it_works: {
@@ -71,7 +71,7 @@ export const builtInHomeContent: HomeContent = {
 			},
 			{
 				title: "Meet on campus",
-				text: "Hand the book over at an approved spot on campus, at a time you both agree on. Check its condition before you pay.",
+				text: "Agree with the other student where and when to meet on campus. Check the book's condition before you pay.",
 				note: "Payment happens in person",
 			},
 		],
@@ -107,8 +107,8 @@ export const builtInHomeContent: HomeContent = {
 				text: "Registration only accepts your university's email domains, and you verify the address before you can sign in.",
 			},
 			{
-				title: "Approved meeting spots",
-				text: "Handovers take place at campus locations approved by the Akshara team, at a time you both agree on.",
+				title: "Meet in person",
+				text: "Pick a busy, public place on campus and a time that suits you both.",
 			},
 			{
 				title: "Check before you pay",

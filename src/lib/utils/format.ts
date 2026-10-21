@@ -43,12 +43,3 @@ export function formatRelativeTime(iso: string, now: Date = new Date()) {
 	}
 	return relativeFormat.format(0, "second");
 }
-
-/**
- * `date` as a `datetime-local` input value: the browser's local time, to the minute, e.g.
- * "2026-10-21T14:30".
- */
-export function toDateTimeInputValue(date: Date) {
-	const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
-	return local.toISOString().slice(0, 16);
-}

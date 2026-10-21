@@ -34,7 +34,7 @@ export default function ProfileSummary() {
 	const student = useStudent();
 	const available = useAvailableListingCount();
 	const review = useExchangeCount("review");
-	const meetups = useExchangeCount("meetups");
+	const accepted = useExchangeCount("accepted");
 	const completed = useCompletedExchangeCount();
 	const details = [student.department, student.student_id && `ID ${student.student_id}`];
 
@@ -61,7 +61,7 @@ export default function ProfileSummary() {
 			<dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
 				<Stat label="On the shelf" value={available.data} hint="Listings others can request" />
 				<Stat label="To review" value={review.data} hint="Requests for your books" />
-				<Stat label="Meetups" value={meetups.data} hint="Agreed handovers" />
+				<Stat label="Accepted" value={accepted.data} hint="Waiting to change hands" />
 				<Stat label="Completed" value={completed.data} hint="Books exchanged so far" />
 			</dl>
 		</Card>

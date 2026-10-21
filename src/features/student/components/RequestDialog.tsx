@@ -14,7 +14,7 @@ import { conditionLabels, listingPrice } from "@/features/listings/labels";
 import { CURRENCY_SYMBOL } from "@/lib/utils/format";
 import { readForm } from "@/lib/utils/page-helpers";
 import { type FieldErrors, reportFormError } from "../form-errors";
-import { useMeetupLocations, useRequestListing, useSwappableListings } from "../queries";
+import { useRequestListing, useSwappableListings } from "../queries";
 import { STUDENT_LISTINGS } from "../routes";
 import type { ExchangeInput, Listing } from "../types";
 import BookCover, { coverOf } from "./BookCover";
@@ -32,7 +32,7 @@ export default function RequestDialog({ listing, open, onClose }: RequestDialogP
 			open={open}
 			onClose={onClose}
 			title="Request this book"
-			description={`${listing.seller.full_name} will accept or decline, and pick a meetup spot if they accept.`}
+			description={`${listing.seller.full_name} will accept or decline. Then you agree in the chat where and when to meet on campus.`}
 		>
 			<RequestForm listing={listing} onDone={onClose} />
 		</Dialog>
@@ -43,8 +43,6 @@ function RequestForm({ listing, onDone }: { listing: Listing; onDone: () => void
 	const request = useRequestListing();
 	const isSwap = listing.listing_type === "exchange";
 	const swappable = useSwappableListings(isSwap);
-	const locations = useMeetupLocations();
-	const preferredSpot = locations.data?.find(({ id }) => id === listing.preferred_location);
 	const [errors, setErrors] = useState<FieldErrors>({});
 	const cannotSwap = isSwap && swappable.data?.length === 0;
 
@@ -76,27 +74,13 @@ function RequestForm({ listing, onDone }: { listing: Listing; onDone: () => void
 					</Text>
 				</div>
 
-				{(listing.description || preferredSpot) && (
-					<dl className="space-y-2">
-						{listing.description && (
-							<div>
-								<Text as="dt" variant="label-md" tone="muted">
-									Seller&apos;s notes
-								</Text>
-								<Text as="dd" className="whitespace-pre-line">
-									{listing.description}
-								</Text>
-							</div>
-						)}
-						{preferredSpot && (
-							<div>
-								<Text as="dt" variant="label-md" tone="muted">
-									Prefers to meet at
-								</Text>
-								<Text as="dd">{preferredSpot.name}</Text>
-							</div>
-						)}
-					</dl>
+				{listing.description && (
+					<div>
+						<Text variant="label-md" tone="muted">
+							Seller&apos;s notes
+						</Text>
+						<Text className="whitespace-pre-line">{listing.description}</Text>
+					</div>
 				)}
 
 				{listing.listing_type === "sell" && (

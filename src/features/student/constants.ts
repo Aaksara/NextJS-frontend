@@ -1,8 +1,8 @@
-import { BookCopy, LayoutDashboard, type LucideIcon } from "lucide-react";
+import { BookCopy, LayoutDashboard, type LucideIcon, MessagesSquare } from "lucide-react";
 
 import type { BadgeTone } from "@/components/ui/badge";
 
-import { STUDENT_HOME, STUDENT_LISTINGS } from "./routes";
+import { STUDENT_HOME, STUDENT_LISTINGS, STUDENT_MESSAGES } from "./routes";
 import type { ExchangeStatus } from "./types";
 
 export const BROWSE_PAGE_SIZE = 8;
@@ -23,11 +23,12 @@ interface StudentNavItem {
 export const studentNavItems: StudentNavItem[] = [
 	{ href: STUDENT_HOME, label: "Overview", icon: LayoutDashboard },
 	{ href: STUDENT_LISTINGS, label: "My listings", icon: BookCopy },
+	{ href: STUDENT_MESSAGES, label: "Messages", icon: MessagesSquare },
 ];
 
 export const exchangeStatusLabels: Record<ExchangeStatus, string> = {
 	pending: "Pending",
-	accepted: "Meetup set",
+	accepted: "Accepted",
 	rejected: "Declined",
 	cancelled: "Cancelled",
 	completed: "Completed",
