@@ -1,3 +1,5 @@
+import type { Condition, ListingStatus, ListingType } from "@/features/listings/types";
+
 export interface Student {
 	id: number;
 	email: string;
@@ -16,16 +18,14 @@ export interface Student {
 	request_count: number;
 }
 
-export type ListingStatus = "available" | "reserved" | "completed" | "withdrawn";
-
 export interface StudentListing {
 	id: number;
 	title: string;
 	/** Comma separated. */
 	authors: string;
 	course_code: string;
-	condition: "new" | "like_new" | "good" | "fair" | "poor";
-	listing_type: "sell" | "exchange" | "donate";
+	condition: Condition;
+	listing_type: ListingType;
 	/** Decimal string, e.g. "25.00". `null` for swaps and donations. */
 	price: string | null;
 	status: ListingStatus;

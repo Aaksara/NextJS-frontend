@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import AdminProviders from "@/components/admin/AdminProviders";
+import QueryProvider from "@/components/providers/QueryProvider";
 
 export const metadata: Metadata = {
 	title: { default: "Admin", template: "%s · Akshara Admin" },
@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-	return <AdminProviders>{children}</AdminProviders>;
+	return <QueryProvider>{children}</QueryProvider>;
 }

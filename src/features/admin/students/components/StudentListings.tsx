@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-import EmptyState from "@/components/admin/EmptyState";
-import QueryState from "@/components/admin/QueryState";
+import EmptyState from "@/components/feedback/EmptyState";
+import QueryState from "@/components/feedback/QueryState";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
@@ -17,17 +17,18 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Text } from "@/components/ui/typography";
-import { formatDate, formatNumber } from "@/lib/utils/format";
-
 import {
 	conditionLabels,
-	LISTING_PAGE_SIZE,
+	listingPrice,
 	listingStatusLabels,
 	listingStatusTones,
-} from "../constants";
-import { listingPrice } from "../listing-price";
+} from "@/features/listings/labels";
+import type { ListingStatus } from "@/features/listings/types";
+import { formatCount, formatDate } from "@/lib/utils/format";
+
+import { LISTING_PAGE_SIZE } from "../constants";
 import { useStudentListings } from "../queries";
-import type { ListingStatus, StudentListingQuery } from "../types";
+import type { StudentListingQuery } from "../types";
 
 const statuses = Object.entries(listingStatusLabels) as [ListingStatus, string][];
 
@@ -120,7 +121,7 @@ export default function StudentListings({ studentId }: { studentId: number }) {
 							page={page}
 							pageCount={Math.max(1, Math.ceil(total / LISTING_PAGE_SIZE))}
 							onPageChange={setPage}
-							summary={`${formatNumber(total)} listings`}
+							summary={formatCount(total, "listing")}
 							className="border-t"
 						/>
 					</>

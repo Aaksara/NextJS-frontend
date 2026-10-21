@@ -2,9 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useEffect } from "react";
-
+import QueryState from "@/components/feedback/QueryState";
 import { ADMIN_LOGIN, useAdminSession } from "./admin-session";
-import QueryState from "./QueryState";
 
 /**
  * Shows the console only to the signed-in super admin and sends everyone else to the login

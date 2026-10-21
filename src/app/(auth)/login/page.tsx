@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { TextLink } from "@/components/ui/text-link";
+import { safeStudentPath } from "@/features/student/session";
 import { getErrorMessage, getFieldErrors, readForm } from "@/lib/utils/page-helpers";
 import { authService } from "@/services/auth.service";
 
@@ -26,8 +27,9 @@ export default function LoginPage() {
 		setLoading(true);
 		setErrors({});
 		try {
-			await authService.login(email, password, remember === "on");
-			router.push("/");
+			const user = await authService.login(email, password, remember === "on");
+			const next = new URLSearchParams(window.location.search).get("next");
+			router.push(user.is_superuser ? "/admin" : safeStudentPath(next));
 		} catch (error) {
 			setErrors(getFieldErrors(error));
 			toast.error(getErrorMessage(error));

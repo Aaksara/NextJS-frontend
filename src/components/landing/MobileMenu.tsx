@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 
-import { useSession } from "@/components/landing/session";
+import { homeFor, useSession } from "@/components/landing/session";
 import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import { Text, textVariants } from "@/components/ui/typography";
@@ -85,6 +85,11 @@ export default function MobileMenu({ links, className }: MobileMenuProps) {
 									<Text variant="label-lg" tone="muted" className="px-3 pb-1">
 										Signed in as {user.full_name}
 									</Text>
+									<Button asChild size="lg" className="rounded-full">
+										<Link href={homeFor(user)} onClick={close}>
+											{user.is_superuser ? "Admin console" : "My dashboard"}
+										</Link>
+									</Button>
 									<Button variant="outlined" size="lg" className="rounded-full" onClick={signOut}>
 										Sign out
 									</Button>

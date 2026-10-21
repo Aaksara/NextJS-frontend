@@ -19,7 +19,7 @@ const builtInSlides: Slide[] = [
 	{
 		image: "/images/landing/hero-list.svg",
 		alt: "A phone showing a textbook's ISBN barcode beside a priced stack of books",
-		caption: "List a book by its ISBN",
+		caption: "List a book in a minute",
 	},
 	{
 		image: "/images/landing/hero-pass-on.svg",

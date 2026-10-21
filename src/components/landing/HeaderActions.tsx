@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 
-import { useSession } from "@/components/landing/session";
+import { homeFor, useSession } from "@/components/landing/session";
 import { Button } from "@/components/ui/button";
-import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils/utils";
 
 export default function HeaderActions({ className }: { className?: string }) {
@@ -12,12 +11,12 @@ export default function HeaderActions({ className }: { className?: string }) {
 
 	if (user) {
 		return (
-			<div className={cn("flex items-center gap-3", className)}>
-				<Text as="span" variant="label-lg">
-					{user.full_name}
-				</Text>
-				<Button variant="outlined" size="sm" className="rounded-full" onClick={signOut}>
+			<div className={cn("flex items-center gap-2", className)}>
+				<Button variant="ghost" size="sm" className="text-foreground" onClick={signOut}>
 					Sign out
+				</Button>
+				<Button asChild size="sm" className="rounded-full px-4">
+					<Link href={homeFor(user)}>{user.is_superuser ? "Admin console" : "My dashboard"}</Link>
 				</Button>
 			</div>
 		);

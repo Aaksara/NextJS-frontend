@@ -1,24 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
-import { ApiRequestError, tokenStorage } from "@/lib/api/api-client";
+import { sessionKey } from "@/components/providers/QueryProvider";
 import { authService } from "@/services/auth.service";
 
 const ADMIN_HOME = "/admin";
 export const ADMIN_LOGIN = "/admin/login";
 
-export const adminSessionKey = ["admin", "session"] as const;
+export const adminSessionKey = [...sessionKey, "admin"] as const;
 
 /** The signed-in super admin, or `null` when nobody, or a student, is signed in. */
 async function loadSuperAdmin() {
-	if (!tokenStorage.getRefresh()) return null;
-	try {
-		const user = await authService.getCurrentUser();
-		return user.is_superuser ? user : null;
-	} catch (error) {
-		if (error instanceof ApiRequestError && error.status === 401) return null;
-		throw error;
-	}
+	const user = await authService.getSignedInUser();
+	return user?.is_superuser ? user : null;
 }
 
 export function useAdminSession() {

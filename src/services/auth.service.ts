@@ -1,4 +1,4 @@
-import { requestApi, tokenStorage } from "@/lib/api/api-client";
+import { ApiRequestError, requestApi, tokenStorage } from "@/lib/api/api-client";
 
 export type User = {
 	id: number;
@@ -37,6 +37,17 @@ export const authService = {
 	},
 
 	getCurrentUser: () => requestApi<User>("/api/auth/me/"),
+
+	/** The signed-in user, or `null` when nobody is signed in or the session has expired. */
+	getSignedInUser: async () => {
+		if (!tokenStorage.getRefresh()) return null;
+		try {
+			return await authService.getCurrentUser();
+		} catch (error) {
+			if (error instanceof ApiRequestError && error.status === 401) return null;
+			throw error;
+		}
+	},
 
 	register: (input: RegisterInput) => requestApi("/api/auth/register/", { body: input }),
 

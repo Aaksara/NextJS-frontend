@@ -61,7 +61,7 @@ export const builtInHomeContent: HomeContent = {
 		items: [
 			{
 				title: "List or find a book",
-				text: "Enter a book's ISBN and Akshara fills in the title, author and edition. Looking for one? Search by title, author, ISBN or course code.",
+				text: "Add the book's title, its condition and your price, and classmates can request it straight away. Looking for one? Search by title, author or course code.",
 				note: "Search by course code",
 			},
 			{

@@ -10,7 +10,7 @@ import {
 	useState,
 } from "react";
 
-import { tokenStorage } from "@/lib/api/api-client";
+import { STUDENT_HOME } from "@/features/student/routes";
 import { authService, type User } from "@/services/auth.service";
 
 type Session = {
@@ -26,11 +26,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState<User | null>();
 
 	useEffect(() => {
-		// Visitors who have never signed in have no token, so skip the request.
-		const request = tokenStorage.getRefresh()
-			? authService.getCurrentUser()
-			: Promise.resolve(null);
-		request.then(setUser, () => setUser(null));
+		authService.getSignedInUser().then(setUser, () => setUser(null));
 	}, []);
 
 	const signOut = useCallback(async () => {
@@ -55,4 +51,9 @@ export function useSession() {
 export function SignedOut({ children }: { children: ReactNode }) {
 	const { user } = useSession();
 	return user ? null : children;
+}
+
+/** Where a signed-in user's own pages are: the console for the admin, the portal for students. */
+export function homeFor(user: User) {
+	return user.is_superuser ? "/admin" : STUDENT_HOME;
 }

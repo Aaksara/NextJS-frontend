@@ -3,9 +3,9 @@
 import { AtSign, MapPin, Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 
-import EmptyState from "@/components/admin/EmptyState";
-import PageHeader from "@/components/admin/PageHeader";
-import QueryState from "@/components/admin/QueryState";
+import EmptyState from "@/components/feedback/EmptyState";
+import QueryState from "@/components/feedback/QueryState";
+import PageHeader from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

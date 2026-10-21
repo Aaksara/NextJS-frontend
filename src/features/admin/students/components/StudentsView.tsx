@@ -4,9 +4,9 @@ import { Download } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import EmptyState from "@/components/admin/EmptyState";
-import PageHeader from "@/components/admin/PageHeader";
-import QueryState from "@/components/admin/QueryState";
+import EmptyState from "@/components/feedback/EmptyState";
+import QueryState from "@/components/feedback/QueryState";
+import PageHeader from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Pagination } from "@/components/ui/pagination";
@@ -14,7 +14,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { Select } from "@/components/ui/select";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { saveFile } from "@/lib/utils/download";
-import { formatNumber } from "@/lib/utils/format";
+import { formatCount } from "@/lib/utils/format";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { STUDENT_PAGE_SIZE } from "../constants";
@@ -112,7 +112,7 @@ export default function StudentsView() {
 									page={page}
 									pageCount={pageCount}
 									onPageChange={setPage}
-									summary={`${formatNumber(total)} students`}
+									summary={formatCount(total, "student")}
 									className="border-t"
 								/>
 							</>
