@@ -17,19 +17,64 @@ export interface Student {
 	request_count: number;
 }
 
+export type ListingStatus = "available" | "reserved" | "completed" | "withdrawn";
+
 export interface StudentListing {
 	id: number;
 	title: string;
+	/** Comma separated. */
+	authors: string;
 	course_code: string;
 	condition: "new" | "like_new" | "good" | "fair" | "poor";
 	listing_type: "sell" | "exchange" | "donate";
 	/** Decimal string, e.g. "25.00". `null` for swaps and donations. */
 	price: string | null;
-	status: "available" | "reserved" | "completed" | "withdrawn";
+	status: ListingStatus;
+	/** Exchange requests the listing has drawn, in any state. */
+	request_count: number;
+	created_at: string;
 }
 
 export interface StudentDetail extends Student {
 	recent_listings: StudentListing[];
+}
+
+export interface StudentListingQuery {
+	/** `""` for every status. */
+	status: ListingStatus | "";
+	/** 1-based. */
+	page: number;
+}
+
+/**
+ * One event in a student's history. `role` is the student's side of it: "buyer" when they
+ * asked for the book, "seller" when it is theirs, and `""` for events with no other side.
+ */
+export interface ActivityEvent {
+	/** Unique within one student's history. */
+	id: string;
+	kind:
+		| "joined"
+		| "listed"
+		| "requested"
+		| "accepted"
+		| "rejected"
+		| "cancelled"
+		| "completed"
+		| "messaged";
+	at: string;
+	role: "buyer" | "seller" | "";
+	listing_id: number | null;
+	book_title: string;
+	/** Full name of the other student. */
+	counterpart: string;
+}
+
+export interface ActivityPage {
+	/** Newest first. */
+	results: ActivityEvent[];
+	/** Whether older events exist beyond `results`. */
+	has_more: boolean;
 }
 
 export interface DirectorySummary {
