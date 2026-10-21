@@ -1,4 +1,3 @@
-/** As returned by `/api/admin/students/`. */
 export interface Student {
 	id: number;
 	email: string;
@@ -17,19 +16,59 @@ export interface Student {
 	request_count: number;
 }
 
+export type ListingStatus = "available" | "reserved" | "completed" | "withdrawn";
+
 export interface StudentListing {
 	id: number;
 	title: string;
+	/** Comma separated. */
+	authors: string;
 	course_code: string;
 	condition: "new" | "like_new" | "good" | "fair" | "poor";
 	listing_type: "sell" | "exchange" | "donate";
 	/** Decimal string, e.g. "25.00". `null` for swaps and donations. */
 	price: string | null;
-	status: "available" | "reserved" | "completed" | "withdrawn";
+	status: ListingStatus;
+	request_count: number;
+	created_at: string;
 }
 
 export interface StudentDetail extends Student {
 	recent_listings: StudentListing[];
+}
+
+export interface StudentListingQuery {
+	/** `""` for every status. */
+	status: ListingStatus | "";
+	/** 1-based. */
+	page: number;
+}
+
+/**
+ * One event in a student's history. `role` is the student's side of it: "buyer" when they
+ * asked for the book, "seller" when it is theirs, and `""` for events with no other side.
+ */
+export interface ActivityEvent {
+	id: string;
+	kind:
+		| "joined"
+		| "listed"
+		| "requested"
+		| "accepted"
+		| "rejected"
+		| "cancelled"
+		| "completed"
+		| "messaged";
+	at: string;
+	role: "buyer" | "seller" | "";
+	listing_id: number | null;
+	book_title: string;
+	counterpart: string;
+}
+
+export interface ActivityPage {
+	results: ActivityEvent[];
+	has_more: boolean;
 }
 
 export interface DirectorySummary {
@@ -43,7 +82,6 @@ export interface DirectorySummary {
 	active_buyers: number;
 }
 
-/** Which students the directory lists. */
 export type StudentFilter = "all" | "unverified" | "suspended";
 
 export interface StudentQuery {

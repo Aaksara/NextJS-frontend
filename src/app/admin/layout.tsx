@@ -5,7 +5,6 @@ import AdminProviders from "@/components/admin/AdminProviders";
 
 export const metadata: Metadata = {
 	title: { default: "Admin", template: "%s · Akshara Admin" },
-	// Internal tool: keep it out of search results.
 	robots: { index: false, follow: false },
 };
 

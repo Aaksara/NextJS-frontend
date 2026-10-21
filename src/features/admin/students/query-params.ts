@@ -1,5 +1,5 @@
-import { STUDENT_PAGE_SIZE } from "./constants";
-import type { StudentQuery } from "./types";
+import { LISTING_PAGE_SIZE, STUDENT_PAGE_SIZE } from "./constants";
+import type { StudentListingQuery, StudentQuery } from "./types";
 
 /**
  * The API's query string for a directory view. `withPage` is off for exports, which
@@ -15,5 +15,11 @@ export function studentQueryParams(query: StudentQuery, withPage = true) {
 		params.set("page", String(query.page));
 		params.set("page_size", String(STUDENT_PAGE_SIZE));
 	}
+	return params.toString();
+}
+
+export function listingQueryParams({ status, page }: StudentListingQuery) {
+	const params = new URLSearchParams({ page: String(page), page_size: String(LISTING_PAGE_SIZE) });
+	if (status) params.set("status", status);
 	return params.toString();
 }

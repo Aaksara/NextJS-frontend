@@ -5,15 +5,15 @@ import Link from "next/link";
 import { useSession } from "@/components/landing/session";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
+import { cn } from "@/lib/utils/utils";
 
-/** Sign in and Get started, or the signed-in student's name and Sign out. */
-export default function HeaderActions() {
+export default function HeaderActions({ className }: { className?: string }) {
 	const { user, signOut } = useSession();
 
 	if (user) {
 		return (
-			<div className="flex items-center gap-3">
-				<Text as="span" variant="label-lg" className="hidden sm:inline">
+			<div className={cn("flex items-center gap-3", className)}>
+				<Text as="span" variant="label-lg">
 					{user.full_name}
 				</Text>
 				<Button variant="outlined" size="sm" className="rounded-full" onClick={signOut}>
@@ -24,7 +24,7 @@ export default function HeaderActions() {
 	}
 
 	return (
-		<div className="flex items-center gap-2">
+		<div className={cn("flex items-center gap-2", className)}>
 			<Button asChild variant="ghost" size="sm" className="text-foreground">
 				<Link href="/login">Sign in</Link>
 			</Button>

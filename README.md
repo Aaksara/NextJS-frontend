@@ -29,23 +29,25 @@ The value is baked in at build time.
 ## Layout
 
 ```
-src/app/                    pages (auth pages live under app/auth/)
+src/app/                    routes; the student auth pages are in the (auth) group
 src/app/providers.tsx       app-wide providers (toasts)
-src/components/ui/          shadcn/ui components (button, card, input, label)
-src/components/form/        AuthForm, FormInput
+src/components/ui/          shadcn/ui-style primitives (button, dialog, table, ...)
+src/components/form/        Field, FormInput, PasswordStrength
+src/components/landing/     home page sections
 src/lib/api/api-client.ts   requestApi: calls the API with the Bearer token
-src/lib/utils/              cn(), page helpers
-src/services/               one service per backend area, e.g. auth.service.ts
-src/hooks/                  shared React hooks (pagination, drag to reorder)
-public/icons/               app icons
+src/lib/utils/              cn(), formatting, form and download helpers
+src/services/               storefront services: auth.service.ts, cms.service.ts
+src/features/admin/         admin console areas (see below)
+src/hooks/                  shared React hooks
+public/                     icons and built-in slide images
 ```
 
 Add shadcn/ui components with `pnpm dlx shadcn@latest add <name>`.
 
 ## Calling the API
 
-Put the calls for each backend area in a service in `src/services/`, and use
-`requestApi` inside it:
+Put the calls for each backend area in a service (`src/services/` for the storefront,
+`src/features/admin/<area>/service.ts` for the console), and use `requestApi` inside it:
 
 ```ts
 await requestApi("/api/listings/");
@@ -55,7 +57,8 @@ await requestApi("/api/listings/1/images/", { body: new FormData(form) });
 await requestApi("/api/listings/1/images/2/", { method: "DELETE" });
 ```
 
-Login stores the access and refresh tokens in `localStorage`, and `requestApi` sends
+Login stores the access and refresh tokens in `localStorage` when "Remember me" is
+ticked, otherwise in `sessionStorage`, and `requestApi` sends
 `Authorization: Bearer <access>`. When a call returns 401, it refreshes the tokens once
 and retries. Errors are thrown as `ApiRequestError`, with `message` and per-field `fields`.
 

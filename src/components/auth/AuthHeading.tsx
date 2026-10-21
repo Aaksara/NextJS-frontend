@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils/utils";
 interface AuthHeadingProps {
 	title: string;
 	description?: ReactNode;
-	/** Short label in a badge above the title, e.g. "Student access". */
 	eyebrow?: string;
 	/** Shown in a circle above the title. Centers the heading. */
 	icon?: ReactNode;

@@ -15,7 +15,6 @@ interface FieldProps {
 	className?: string;
 }
 
-/** A label above a form control, with a hint or the API's errors below it. */
 export default function Field({ htmlFor, label, hint, errors, children, className }: FieldProps) {
 	return (
 		<div className={cn("space-y-2", className)}>

@@ -4,7 +4,6 @@ import AdminGate from "@/components/admin/AdminGate";
 import Sidebar from "@/components/admin/Sidebar";
 import TopBar from "@/components/admin/TopBar";
 
-/** Sidebar, top bar and content area shared by every console page. */
 export default function ConsoleLayout({ children }: { children: ReactNode }) {
 	return (
 		<AdminGate>

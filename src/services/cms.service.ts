@@ -1,3 +1,4 @@
+import { builtInHomeContent, type HomeContent } from "@/components/landing/content";
 import type { Slide } from "@/components/ui/image-slider";
 import { API_URL } from "@/lib/api/api-client";
 
@@ -12,7 +13,6 @@ export const HOME_SECTIONS = [
 
 export type HomeSectionKind = (typeof HOME_SECTIONS)[number];
 
-/** The storefront's sliders. Each shows its own slides from the admin console. */
 export type SliderKey = "home_hero" | "home_safety" | "sign_in";
 
 type ApiSlide = { id: number; caption: string; link: string; image: string; alt_text: string };
@@ -55,14 +55,18 @@ async function getPublic<T>(path: string, fallback: T): Promise<T> {
 }
 
 export const cmsService = {
-	/** Kinds of the visible home page sections, top to bottom. */
 	getHomeSections: async () => {
 		const kinds = await getPublic<string[]>("/api/cms/home-sections/", [...HOME_SECTIONS]);
 		// A kind added to the API before this app knows how to show it is skipped.
 		return kinds.filter(isHomeSectionKind);
 	},
 
-	/** A slider's published slides, in order. Empty when it has none. */
+	/** Each section's text: the admin's where they have written it, else the built-in text. */
+	getHomeContent: async (): Promise<HomeContent> => {
+		const saved = await getPublic<Partial<HomeContent>>("/api/cms/home-content/", {});
+		return { ...builtInHomeContent, ...saved };
+	},
+
 	getSlides: async (slider: SliderKey): Promise<Slide[]> => {
 		const slides = await getPublic<ApiSlide[]>(`/api/cms/slides/?slider=${slider}`, []);
 		return slides.map((slide) => ({

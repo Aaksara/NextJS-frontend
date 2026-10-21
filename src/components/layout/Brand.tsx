@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { Text } from "@/components/ui/typography";
 
-/** Logo and name, linking home. */
 export default function Brand() {
 	return (
 		<Link href="/" className="flex items-center gap-2 text-primary">

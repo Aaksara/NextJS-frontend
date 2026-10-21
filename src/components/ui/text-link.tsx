@@ -4,7 +4,6 @@ import type * as React from "react";
 import { textVariants } from "@/components/ui/typography";
 import { cn } from "@/lib/utils/utils";
 
-/** In-app link styled as emphasized text. Icons can sit beside the label. */
 function TextLink({ className, ...props }: React.ComponentProps<typeof Link>) {
 	return (
 		<Link

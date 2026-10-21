@@ -1,6 +1,5 @@
 import type { SliderKey } from "@/services/cms.service";
 
-/** The site's sliders, in the order the admin lists them. */
 export const sliders: { key: SliderKey; label: string; description: string }[] = [
 	{
 		key: "home_hero",

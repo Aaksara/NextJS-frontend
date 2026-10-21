@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
 
 import { studentService } from "./service";
-import type { StudentQuery } from "./types";
+import type { StudentListingQuery, StudentQuery } from "./types";
 
 const all = ["admin", "students"] as const;
 
@@ -19,6 +19,8 @@ const studentKeys = {
 	all,
 	list: (query: StudentQuery) => [...all, "list", query] as const,
 	detail: (id: number | null) => [...all, "detail", id] as const,
+	listings: (id: number, query: StudentListingQuery) => [...all, "listings", id, query] as const,
+	activity: (id: number, limit: number) => [...all, "activity", id, limit] as const,
 	summary: [...all, "summary"] as const,
 };
 
@@ -26,7 +28,6 @@ export function useStudents(query: StudentQuery) {
 	return useQuery({
 		queryKey: studentKeys.list(query),
 		queryFn: () => studentService.list(query),
-		// Keep showing the current page while the next one loads.
 		placeholderData: keepPreviousData,
 	});
 }
@@ -38,11 +39,26 @@ export function useStudent(id: number | null) {
 	});
 }
 
+export function useStudentListings(id: number, query: StudentListingQuery) {
+	return useQuery({
+		queryKey: studentKeys.listings(id, query),
+		queryFn: () => studentService.listings(id, query),
+		placeholderData: keepPreviousData,
+	});
+}
+
+export function useStudentActivity(id: number, limit: number) {
+	return useQuery({
+		queryKey: studentKeys.activity(id, limit),
+		queryFn: () => studentService.activity(id, limit),
+		placeholderData: keepPreviousData,
+	});
+}
+
 export function useDirectorySummary() {
 	return useQuery({ queryKey: studentKeys.summary, queryFn: studentService.getSummary });
 }
 
-/** A change to one student that refreshes the directory and reports the outcome. */
 function useStudentAction(action: (id: number) => Promise<unknown>, successMessage: string) {
 	const queryClient = useQueryClient();
 	return useMutation({
@@ -61,6 +77,9 @@ export const useReactivateStudent = () =>
 
 export const useVerifyStudentEmail = () =>
 	useStudentAction(studentService.verifyEmail, "Email marked as verified");
+
+export const useUnverifyStudentEmail = () =>
+	useStudentAction(studentService.unverifyEmail, "Email marked as unverified and signed out");
 
 export const useResendVerification = () =>
 	useStudentAction(studentService.resendVerification, "Verification email sent");

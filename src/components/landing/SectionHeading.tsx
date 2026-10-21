@@ -11,7 +11,6 @@ interface SectionHeadingProps {
 	className?: string;
 }
 
-/** Gold eyebrow, title and lead for a landing page section. */
 export default function SectionHeading({
 	eyebrow,
 	title,

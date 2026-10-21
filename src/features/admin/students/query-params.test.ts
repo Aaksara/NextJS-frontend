@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { studentQueryParams } from "./query-params";
+import { listingQueryParams, studentQueryParams } from "./query-params";
 import type { StudentQuery } from "./types";
 
 const base: StudentQuery = { search: "", filter: "all", page: 1 };
@@ -23,4 +23,14 @@ describe("studentQueryParams", () => {
 
 	it("drops paging for exports", () =>
 		expect(studentQueryParams({ ...base, page: 4 }, false)).toBe("ordering=-date_joined"));
+});
+
+describe("listingQueryParams", () => {
+	it("leaves the status out to list every listing", () =>
+		expect(listingQueryParams({ status: "", page: 1 })).toBe("page=1&page_size=10"));
+
+	it("narrows to one status", () =>
+		expect(
+			new URLSearchParams(listingQueryParams({ status: "withdrawn", page: 2 })).get("status"),
+		).toBe("withdrawn"));
 });

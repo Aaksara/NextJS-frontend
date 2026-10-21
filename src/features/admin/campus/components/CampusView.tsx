@@ -25,7 +25,6 @@ import { useCampusSettings, useMeetupLocations, useSetLocationActive } from "../
 import type { MeetupLocation } from "../types";
 import LocationFormDialog from "./LocationFormDialog";
 
-/** Which location the form dialog is open for. */
 type Editing = { location?: MeetupLocation } | null;
 
 function EmailDomains() {

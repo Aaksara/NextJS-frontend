@@ -6,10 +6,8 @@ import type { Slide } from "./types";
 const SLIDES = "/api/admin/slides/";
 
 export const slideService = {
-	/** Every slide, in display order. */
 	list: () => requestApi<Slide[]>(SLIDES),
 
-	/** `form` holds the slide's fields and, for a new slide, its `image` file. */
 	create: (form: FormData) => requestApi<Slide>(SLIDES, { body: form }),
 
 	/** Only the fields sent change. Leave out `image` to keep the current one. */
@@ -18,7 +16,6 @@ export const slideService = {
 
 	remove: (id: number) => requestApi(`${SLIDES}${id}/`, { method: "DELETE" }),
 
-	/** Gives an empty slider the site's built-in slides, ready to edit. */
 	addDefaults: (slider: SliderKey) =>
 		requestApi<Slide[]>(`${SLIDES}add-defaults/`, { body: { slider } }),
 

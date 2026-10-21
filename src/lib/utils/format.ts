@@ -3,6 +3,7 @@ const LOCALE = "en-US";
 const numberFormat = new Intl.NumberFormat(LOCALE);
 const currencyFormat = new Intl.NumberFormat(LOCALE, { style: "currency", currency: "USD" });
 const dateFormat = new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium" });
+const dateTimeFormat = new Intl.DateTimeFormat(LOCALE, { dateStyle: "medium", timeStyle: "short" });
 const relativeFormat = new Intl.RelativeTimeFormat(LOCALE, { numeric: "auto", style: "narrow" });
 
 export const formatNumber = (value: number) => numberFormat.format(value);
@@ -10,6 +11,8 @@ export const formatNumber = (value: number) => numberFormat.format(value);
 export const formatCurrency = (value: number) => currencyFormat.format(value);
 
 export const formatDate = (iso: string) => dateFormat.format(new Date(iso));
+
+export const formatDateTime = (iso: string) => dateTimeFormat.format(new Date(iso));
 
 const units: [Intl.RelativeTimeFormatUnit, number][] = [
 	["year", 365 * 24 * 60 * 60],

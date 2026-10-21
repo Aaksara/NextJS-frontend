@@ -19,7 +19,6 @@ import { useAddDefaultSlides, usePublishSlide, useReorderSlides, useSlides } fro
 import type { Slide } from "../types";
 import SlideFormDialog from "./SlideFormDialog";
 
-/** Which slide the form is open for, or which slider a new one goes to. */
 type Editing = { slider: SliderKey; slide?: Slide } | null;
 
 interface SliderCardProps {
@@ -34,7 +33,6 @@ interface SliderCardProps {
 	busy: boolean;
 }
 
-/** One slider's slides, in order, with their controls. */
 function SliderCard({
 	label,
 	description,

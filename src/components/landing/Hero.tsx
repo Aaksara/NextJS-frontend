@@ -1,18 +1,13 @@
 import { ArrowRight, BadgeCheck, CircleCheck } from "lucide-react";
 import Link from "next/link";
 
+import type { HomeContent } from "@/components/landing/content";
 import { SignedOut } from "@/components/landing/session";
 import Container from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ImageSlider, type Slide } from "@/components/ui/image-slider";
 import { Text } from "@/components/ui/typography";
-
-const assurances = [
-	"University email required",
-	"Sell, swap or donate",
-	"Meet at approved campus spots",
-];
 
 /** Shown until the admin publishes slides of their own. */
 const builtInSlides: Slide[] = [
@@ -34,29 +29,28 @@ const builtInSlides: Slide[] = [
 ];
 
 interface HeroProps {
-	/** Slides published in the admin console. */
+	content: HomeContent["hero"];
 	slides: Slide[];
 	/** Hides the "How it works" button when that section is hidden. */
 	showHowItWorks: boolean;
 }
 
-export default function Hero({ slides, showHowItWorks }: HeroProps) {
+export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 	return (
 		<section className="bg-linear-to-b from-primary-container/40 to-background">
-			<Container className="grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
+			<Container className="grid items-center gap-10 py-10 sm:py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
 				<div className="space-y-6">
 					<Badge className="border bg-card text-foreground">
 						<BadgeCheck className="text-secondary" />
-						<span className="uppercase tracking-wide">Student-to-student textbook exchange</span>
+						<span className="uppercase tracking-wide">{content.eyebrow}</span>
 					</Badge>
 					<Text as="h1" variant="display-md" tone="primary" className="lg:text-display-lg">
-						Buy, swap and donate textbooks on campus.
+						{content.title}
 					</Text>
 					<Text variant="body-lg" tone="muted" className="max-w-lg">
-						Pass on the books from last semester and find the ones you need for the next. Meet a
-						fellow student at an approved spot on campus to hand them over.
+						{content.description}
 					</Text>
-					<div className="flex flex-wrap gap-3">
+					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
 						<SignedOut>
 							<Button asChild size="lg" className="rounded-full">
 								<Link href="/register">
@@ -72,11 +66,11 @@ export default function Hero({ slides, showHowItWorks }: HeroProps) {
 						)}
 					</div>
 					<ul className="flex flex-wrap gap-x-6 gap-y-2">
-						{assurances.map((text) => (
-							<li key={text} className="flex items-center gap-1.5">
+						{content.items.map(({ title }) => (
+							<li key={title} className="flex items-center gap-1.5">
 								<CircleCheck className="size-4 text-secondary" />
 								<Text as="span" variant="body-sm" tone="muted">
-									{text}
+									{title}
 								</Text>
 							</li>
 						))}
@@ -89,7 +83,7 @@ export default function Hero({ slides, showHowItWorks }: HeroProps) {
 					preloadFirst
 					sizes="(min-width: 1024px) 45vw, 100vw"
 					aria-label="Trading textbooks on campus"
-					className="h-80 rounded-3xl shadow-xl shadow-primary/10 sm:h-96 lg:h-112"
+					className="h-72 rounded-3xl shadow-xl shadow-primary/10 sm:h-96 lg:h-112"
 				/>
 			</Container>
 		</section>

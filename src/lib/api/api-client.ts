@@ -18,7 +18,6 @@ export type ApiRequestOptions = {
 	body?: object;
 };
 
-/** An error response: a message plus the messages for each form field. */
 export class ApiRequestError extends Error {
 	constructor(
 		message: string,
@@ -81,7 +80,6 @@ async function refreshTokens() {
 	return true;
 }
 
-/** Sends the request, refreshing expired tokens once and retrying. */
 async function sendWithRefresh(endpoint: string, options: ApiRequestOptions) {
 	const response = await send(endpoint, options);
 	if (response.status === 401 && !NO_REFRESH.includes(endpoint) && (await refreshTokens())) {
@@ -90,12 +88,28 @@ async function sendWithRefresh(endpoint: string, options: ApiRequestOptions) {
 	return response;
 }
 
+/**
+ * Adds the field errors in `value` to `fields`. A list of objects nests them, e.g.
+ * {"items": [{}, {"text": ["..."]}]}; those are named by their path, here "items.1.text".
+ */
+function collectFieldErrors(value: unknown, path: string, fields: Record<string, string[]>) {
+	if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+		fields[path] = value;
+	} else if (Array.isArray(value)) {
+		for (const [index, item] of value.entries()) {
+			collectFieldErrors(item, `${path}.${index}`, fields);
+		}
+	} else if (value && typeof value === "object") {
+		for (const [key, item] of Object.entries(value)) {
+			collectFieldErrors(item, path ? `${path}.${key}` : key, fields);
+		}
+	}
+}
+
 /** Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}. */
 function toApiError(status: number, data: Record<string, unknown> | null) {
 	const fields: Record<string, string[]> = {};
-	for (const [key, value] of Object.entries(data ?? {})) {
-		if (Array.isArray(value)) fields[key] = value.map(String);
-	}
+	collectFieldErrors(data, "", fields);
 	const detail = typeof data?.detail === "string" ? data.detail : undefined;
 	// A server error has no fields to highlight, and its body is usually an HTML page.
 	const fallback =
@@ -116,14 +130,12 @@ export async function requestApi<T = unknown>(
 	throw toApiError(response.status, data);
 }
 
-/** Downloads a file the API generates, e.g. a CSV export. */
 export async function requestFile(endpoint: string): Promise<Blob> {
 	const response = await sendWithRefresh(endpoint, {});
 	if (response.ok) return response.blob();
 	throw toApiError(response.status, await response.json().catch(() => null));
 }
 
-/** A page of results from a paginated list endpoint. */
 export type Paginated<T> = {
 	count: number;
 	next: string | null;

@@ -24,8 +24,8 @@ export default function LandingFooter({
 	return (
 		<footer className="border-t bg-card">
 			<Container className="py-12">
-				<div className="grid gap-10 md:grid-cols-[2fr_1fr_1fr]">
-					<div className="space-y-3">
+				<div className="grid grid-cols-2 gap-10 md:grid-cols-[2fr_1fr_1fr]">
+					<div className="col-span-2 space-y-3 md:col-span-1">
 						<Brand />
 						<Text variant="body-sm" tone="muted" className="max-w-xs">
 							Buy, swap and donate textbooks with students at your university.

@@ -3,7 +3,6 @@ import Link from "next/link";
 
 import { Text } from "@/components/ui/typography";
 
-/** Logo and console name, linking to the admin home. */
 export default function AdminBrand() {
 	return (
 		<Link href="/admin" className="flex items-center gap-3">

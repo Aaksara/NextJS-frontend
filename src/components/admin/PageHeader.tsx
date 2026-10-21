@@ -5,7 +5,6 @@ import { Text } from "@/components/ui/typography";
 interface PageHeaderProps {
 	title: string;
 	description: string;
-	/** Buttons on the right. */
 	actions?: ReactNode;
 }
 
