@@ -109,6 +109,13 @@ describe("requestApi errors", () => {
 		await expect(requestApi("/api/x/")).rejects.toThrow("Not allowed.");
 	});
 
+	it("uses a bare list of messages as the message", async () => {
+		const body = ["This listing is no longer available."];
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json(400, body)));
+
+		await expect(requestApi("/api/x/")).rejects.toThrow("This listing is no longer available.");
+	});
+
 	it("names errors inside lists by their path", async () => {
 		const body = { title: ["Too long."], items: [{}, { text: ["Required."] }] };
 		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json(400, body)));
