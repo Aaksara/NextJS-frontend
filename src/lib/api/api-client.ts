@@ -90,12 +90,28 @@ async function sendWithRefresh(endpoint: string, options: ApiRequestOptions) {
 	return response;
 }
 
+/**
+ * Adds the field errors in `value` to `fields`. A list of objects nests them, e.g.
+ * {"items": [{}, {"text": ["..."]}]}; those are named by their path, here "items.1.text".
+ */
+function collectFieldErrors(value: unknown, path: string, fields: Record<string, string[]>) {
+	if (Array.isArray(value) && value.every((item) => typeof item === "string")) {
+		fields[path] = value;
+	} else if (Array.isArray(value)) {
+		for (const [index, item] of value.entries()) {
+			collectFieldErrors(item, `${path}.${index}`, fields);
+		}
+	} else if (value && typeof value === "object") {
+		for (const [key, item] of Object.entries(value)) {
+			collectFieldErrors(item, path ? `${path}.${key}` : key, fields);
+		}
+	}
+}
+
 /** Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}. */
 function toApiError(status: number, data: Record<string, unknown> | null) {
 	const fields: Record<string, string[]> = {};
-	for (const [key, value] of Object.entries(data ?? {})) {
-		if (Array.isArray(value)) fields[key] = value.map(String);
-	}
+	collectFieldErrors(data, "", fields);
 	const detail = typeof data?.detail === "string" ? data.detail : undefined;
 	// A server error has no fields to highlight, and its body is usually an HTML page.
 	const fallback =

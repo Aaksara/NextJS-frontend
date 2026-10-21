@@ -1,30 +1,17 @@
 import { BookCheck, MailCheck, MapPin } from "lucide-react";
 
+import { type HomeContent, withPositionStyles } from "@/components/landing/content";
 import SectionHeading from "@/components/landing/SectionHeading";
 import Container from "@/components/layout/Container";
 import { ImageSlider, type Slide } from "@/components/ui/image-slider";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils/utils";
 
-const features = [
-	{
-		title: "University email sign-up",
-		text: "Registration only accepts your university's email domains, and you verify the address before you can sign in.",
-		icon: MailCheck,
-		tint: "bg-primary-container text-primary-container-foreground",
-	},
-	{
-		title: "Approved meeting spots",
-		text: "Handovers take place at campus locations approved by the Akshara team, at a time you both agree on.",
-		icon: MapPin,
-		tint: "bg-secondary-container text-secondary-container-foreground",
-	},
-	{
-		title: "Check before you pay",
-		text: "You see the book in person before any money changes hands, so you know it matches the listing.",
-		icon: BookCheck,
-		tint: "bg-tertiary-container text-tertiary-container-foreground",
-	},
+/** The look of each feature, by position. The text comes from `content`. */
+const featureStyles = [
+	{ icon: MailCheck, tint: "bg-primary-container text-primary-container-foreground" },
+	{ icon: MapPin, tint: "bg-secondary-container text-secondary-container-foreground" },
+	{ icon: BookCheck, tint: "bg-tertiary-container text-tertiary-container-foreground" },
 ];
 
 /** Shown until the admin publishes slides for this slider. */
@@ -46,38 +33,45 @@ const builtInSlides: Slide[] = [
 	},
 ];
 
-/** `slides` are the ones published in the admin console for this section. */
-export default function SafetySection({ slides }: { slides: Slide[] }) {
+interface SafetySectionProps {
+	content: HomeContent["safety"];
+	/** Slides published in the admin console for this section. */
+	slides: Slide[];
+}
+
+export default function SafetySection({ content, slides }: SafetySectionProps) {
 	return (
 		<section id="safety" className="scroll-mt-28 border-y bg-muted/60 py-20 md:scroll-mt-16">
 			<Container className="grid items-center gap-12 lg:grid-cols-2">
 				<div>
 					<SectionHeading
-						eyebrow="Built for your campus"
-						title="Trade only with students from your university."
-						description="Akshara isn't open to the public. Everyone you meet signed up with a university email address."
+						eyebrow={content.eyebrow}
+						title={content.title}
+						description={content.description}
 					/>
 					<ul className="mt-8 space-y-6">
-						{features.map(({ title, text, icon: Icon, tint }) => (
-							<li key={title} className="flex gap-4">
-								<span
-									className={cn(
-										"flex size-9 shrink-0 items-center justify-center rounded-lg",
-										tint,
-									)}
-								>
-									<Icon className="size-4" />
-								</span>
-								<div>
-									<Text as="h3" variant="label-lg" tone="primary">
-										{title}
-									</Text>
-									<Text variant="body-sm" tone="muted" className="mt-1">
-										{text}
-									</Text>
-								</div>
-							</li>
-						))}
+						{withPositionStyles(content.items, featureStyles).map(
+							({ title, text, icon: Icon, tint }) => (
+								<li key={title} className="flex gap-4">
+									<span
+										className={cn(
+											"flex size-9 shrink-0 items-center justify-center rounded-lg",
+											tint,
+										)}
+									>
+										<Icon className="size-4" />
+									</span>
+									<div>
+										<Text as="h3" variant="label-lg" tone="primary">
+											{title}
+										</Text>
+										<Text variant="body-sm" tone="muted" className="mt-1">
+											{text}
+										</Text>
+									</div>
+								</li>
+							),
+						)}
 					</ul>
 				</div>
 

@@ -1,3 +1,4 @@
+import { builtInHomeContent, type HomeContent } from "@/components/landing/content";
 import type { Slide } from "@/components/ui/image-slider";
 import { API_URL } from "@/lib/api/api-client";
 
@@ -60,6 +61,12 @@ export const cmsService = {
 		const kinds = await getPublic<string[]>("/api/cms/home-sections/", [...HOME_SECTIONS]);
 		// A kind added to the API before this app knows how to show it is skipped.
 		return kinds.filter(isHomeSectionKind);
+	},
+
+	/** Each section's text: the admin's where they have written it, else the built-in text. */
+	getHomeContent: async (): Promise<HomeContent> => {
+		const saved = await getPublic<Partial<HomeContent>>("/api/cms/home-content/", {});
+		return { ...builtInHomeContent, ...saved };
 	},
 
 	/** A slider's published slides, in order. Empty when it has none. */

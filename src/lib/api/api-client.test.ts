@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { requestApi, tokenStorage } from "./api-client";
+import { ApiRequestError, requestApi, tokenStorage } from "./api-client";
 
 /** Minimal in-memory stand-in for the browser's Storage. */
 function memoryStorage() {
@@ -108,5 +108,18 @@ describe("requestApi errors", () => {
 		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json(400, { detail: "Not allowed." })));
 
 		await expect(requestApi("/api/x/")).rejects.toThrow("Not allowed.");
+	});
+
+	it("names errors inside lists by their path", async () => {
+		const body = { title: ["Too long."], items: [{}, { text: ["Required."] }] };
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue(json(400, body)));
+
+		const error = await requestApi("/api/x/").catch((caught: unknown) => caught);
+
+		expect(error).toBeInstanceOf(ApiRequestError);
+		expect((error as ApiRequestError).fields).toEqual({
+			title: ["Too long."],
+			"items.1.text": ["Required."],
+		});
 	});
 });

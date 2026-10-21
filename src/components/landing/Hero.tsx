@@ -1,18 +1,13 @@
 import { ArrowRight, BadgeCheck, CircleCheck } from "lucide-react";
 import Link from "next/link";
 
+import type { HomeContent } from "@/components/landing/content";
 import { SignedOut } from "@/components/landing/session";
 import Container from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ImageSlider, type Slide } from "@/components/ui/image-slider";
 import { Text } from "@/components/ui/typography";
-
-const assurances = [
-	"University email required",
-	"Sell, swap or donate",
-	"Meet at approved campus spots",
-];
 
 /** Shown until the admin publishes slides of their own. */
 const builtInSlides: Slide[] = [
@@ -34,27 +29,27 @@ const builtInSlides: Slide[] = [
 ];
 
 interface HeroProps {
+	content: HomeContent["hero"];
 	/** Slides published in the admin console. */
 	slides: Slide[];
 	/** Hides the "How it works" button when that section is hidden. */
 	showHowItWorks: boolean;
 }
 
-export default function Hero({ slides, showHowItWorks }: HeroProps) {
+export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 	return (
 		<section className="bg-linear-to-b from-primary-container/40 to-background">
 			<Container className="grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
 				<div className="space-y-6">
 					<Badge className="border bg-card text-foreground">
 						<BadgeCheck className="text-secondary" />
-						<span className="uppercase tracking-wide">Student-to-student textbook exchange</span>
+						<span className="uppercase tracking-wide">{content.eyebrow}</span>
 					</Badge>
 					<Text as="h1" variant="display-md" tone="primary" className="lg:text-display-lg">
-						Buy, swap and donate textbooks on campus.
+						{content.title}
 					</Text>
 					<Text variant="body-lg" tone="muted" className="max-w-lg">
-						Pass on the books from last semester and find the ones you need for the next. Meet a
-						fellow student at an approved spot on campus to hand them over.
+						{content.description}
 					</Text>
 					<div className="flex flex-wrap gap-3">
 						<SignedOut>
@@ -72,11 +67,11 @@ export default function Hero({ slides, showHowItWorks }: HeroProps) {
 						)}
 					</div>
 					<ul className="flex flex-wrap gap-x-6 gap-y-2">
-						{assurances.map((text) => (
-							<li key={text} className="flex items-center gap-1.5">
+						{content.items.map(({ title }) => (
+							<li key={title} className="flex items-center gap-1.5">
 								<CircleCheck className="size-4 text-secondary" />
 								<Text as="span" variant="body-sm" tone="muted">
-									{text}
+									{title}
 								</Text>
 							</li>
 						))}

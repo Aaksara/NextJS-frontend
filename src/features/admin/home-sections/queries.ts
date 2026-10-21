@@ -1,8 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import type { SectionContent } from "@/components/landing/content";
 import { refreshHomePage } from "@/features/admin/refresh-home-page";
 import { getErrorMessage } from "@/lib/utils/page-helpers";
+import type { HomeSectionKind } from "@/services/cms.service";
 
 import { homeSectionService } from "./service";
 
@@ -24,3 +26,36 @@ export function useSaveHomeSections() {
 		onError: (error) => toast.error(getErrorMessage(error)),
 	});
 }
+
+/** A change to one section's text, which then refreshes the list and the home page. */
+function useContentMutation<Input>(
+	mutationFn: (input: Input) => Promise<unknown>,
+	{ successMessage, toastErrors }: { successMessage: string; toastErrors: boolean },
+) {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn,
+		onSuccess: () => {
+			toast.success(successMessage);
+			return refreshHomePage();
+		},
+		onError: (error) => {
+			if (toastErrors) toast.error(getErrorMessage(error));
+		},
+		onSettled: () => queryClient.invalidateQueries({ queryKey: homeSectionKeys.all }),
+	});
+}
+
+/** Errors are shown by the form, next to the fields they are about. */
+export const useSaveSectionContent = () =>
+	useContentMutation(
+		({ kind, content }: { kind: HomeSectionKind; content: SectionContent }) =>
+			homeSectionService.saveContent(kind, content),
+		{ successMessage: "Section text saved", toastErrors: false },
+	);
+
+export const useResetSectionContent = () =>
+	useContentMutation(homeSectionService.resetContent, {
+		successMessage: "Back to the built-in text",
+		toastErrors: true,
+	});

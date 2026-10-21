@@ -1,30 +1,30 @@
 import Link from "next/link";
 
+import type { HomeContent } from "@/components/landing/content";
 import { SignedOut } from "@/components/landing/session";
 import Container from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 
 /** Sign-up prompt. Hidden from students who are already signed in. */
-export default function CallToAction() {
+export default function CallToAction({ content }: { content: HomeContent["call_to_action"] }) {
 	return (
 		<SignedOut>
 			<section className="py-20">
 				<Container>
 					<div className="rounded-3xl bg-panel px-6 py-14 text-center text-panel-foreground shadow-xl sm:px-12">
 						<Text variant="label-sm" className="uppercase tracking-widest text-panel-accent">
-							Join Akshara
+							{content.eyebrow}
 						</Text>
 						<Text
 							as="h2"
 							variant="headline-lg"
 							className="mx-auto mt-3 max-w-xl sm:text-display-md"
 						>
-							Got books from last semester?
+							{content.title}
 						</Text>
 						<Text variant="body-lg" className="mx-auto mt-4 max-w-xl text-panel-muted">
-							Create an account with your university email to list them, or to find the books for
-							your next course.
+							{content.description}
 						</Text>
 						<div className="mt-8 flex flex-wrap justify-center gap-3">
 							<Button
