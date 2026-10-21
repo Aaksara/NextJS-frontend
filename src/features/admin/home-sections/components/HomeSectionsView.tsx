@@ -2,9 +2,8 @@
 
 import { ArrowDown, ArrowUp, PenLine } from "lucide-react";
 import { useEffect, useState } from "react";
-
-import PageHeader from "@/components/admin/PageHeader";
-import QueryState from "@/components/admin/QueryState";
+import QueryState from "@/components/feedback/QueryState";
+import PageHeader from "@/components/layout/PageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

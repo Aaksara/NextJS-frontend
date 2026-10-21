@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from "lucide-react";
 
-import QueryState from "@/components/admin/QueryState";
+import QueryState from "@/components/feedback/QueryState";
 import { Card } from "@/components/ui/card";
 import { TextLink } from "@/components/ui/text-link";
 

@@ -3,9 +3,8 @@
 import { ArrowDown, ArrowUp, Link2, Pencil, Plus } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-
-import PageHeader from "@/components/admin/PageHeader";
-import QueryState from "@/components/admin/QueryState";
+import QueryState from "@/components/feedback/QueryState";
+import PageHeader from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { IconButton } from "@/components/ui/icon-button";

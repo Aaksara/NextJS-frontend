@@ -106,7 +106,9 @@ function collectFieldErrors(value: unknown, path: string, fields: Record<string,
 	}
 }
 
-/** Django REST Framework errors look like {"detail": "..."} or {"field": ["..."]}. */
+/**
+ * Django REST Framework errors look like {"detail": "..."}, {"field": ["..."]} or ["..."].
+ */
 function toApiError(status: number, data: Record<string, unknown> | null) {
 	const fields: Record<string, string[]> = {};
 	collectFieldErrors(data, "", fields);
@@ -116,7 +118,9 @@ function toApiError(status: number, data: Record<string, unknown> | null) {
 		status >= 500
 			? "Something went wrong on the server. Please try again later."
 			: "Please check the highlighted fields.";
-	const message = detail ?? fields.non_field_errors?.join(" ") ?? fallback;
+	// A view's plain `ValidationError("...")` arrives as a bare list, collected under "".
+	const general = fields.non_field_errors ?? fields[""];
+	const message = detail ?? general?.join(" ") ?? fallback;
 	return new ApiRequestError(message, status, fields);
 }
 

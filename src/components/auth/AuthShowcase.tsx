@@ -6,7 +6,7 @@ import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils/utils";
 
 const steps = [
-	{ icon: BookOpen, text: "List a book by its ISBN to sell, swap or donate" },
+	{ icon: BookOpen, text: "List a book in a minute to sell, swap or donate" },
 	{ icon: MessageCircle, text: "Chat to agree on the condition and a time" },
 	{ icon: MapPin, text: "Meet on campus and pay in person" },
 ];

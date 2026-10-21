@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import QueryState from "@/components/admin/QueryState";
+import QueryState from "@/components/feedback/QueryState";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/typography";

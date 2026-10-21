@@ -2,13 +2,12 @@
 
 import { ArrowRight } from "lucide-react";
 
-import QueryState from "@/components/admin/QueryState";
+import QueryState from "@/components/feedback/QueryState";
 import { Card } from "@/components/ui/card";
 import { TextLink } from "@/components/ui/text-link";
 import { Text } from "@/components/ui/typography";
+import { conditionLabels, listingPrice, listingStatusLabels } from "@/features/listings/labels";
 
-import { conditionLabels, listingStatusLabels } from "../constants";
-import { listingPrice } from "../listing-price";
 import { useStudent } from "../queries";
 import { studentPath } from "../routes";
 import { ProfileSection, StudentAccountDetails, StudentIdentity } from "./StudentAccount";

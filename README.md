@@ -37,7 +37,12 @@ src/components/landing/     home page sections
 src/lib/api/api-client.ts   requestApi: calls the API with the Bearer token
 src/lib/utils/              cn(), formatting, form and download helpers
 src/services/               storefront services: auth.service.ts, cms.service.ts
+src/components/feedback/     loading, error and empty states
+src/components/providers/    QueryProvider (React Query) for the signed-in areas
 src/features/admin/         admin console areas (see below)
+src/features/student/       student portal (see below)
+src/features/chat/          buyer-seller messages, used by the portal
+src/features/listings/      listing vocabulary shared by both: conditions, statuses, labels
 src/hooks/                  shared React hooks
 public/                     icons and built-in slide images
 ```
@@ -74,7 +79,7 @@ it too, so the console's screens are not the only guard.
 ```
 src/app/admin/login/          sign-in page
 src/app/admin/(console)/      routes behind the sign-in: students, slides, home, campus
-src/components/admin/         console shell: sign-in gate, sidebar, top bar, page header
+src/components/admin/         console shell: sign-in gate, sidebar, top bar
 src/features/admin/<area>/    one folder per admin area:
   types.ts                      data shapes, as the API returns them
   service.ts                    the only file that calls the API
@@ -94,6 +99,29 @@ cannot be reached.
 
 React Query is provided by `src/app/admin/layout.tsx`, so the storefront does not load it.
 The admin session is never "remembered": it ends when the browser closes.
+
+## Student portal
+
+Students land on `/student` after signing in (`?next=` may send them to another portal
+page; the super admin goes to `/admin`). Signed-out visitors are sent to `/login`.
+
+- `/student`: profile and totals, exchanges to review, accepted exchanges and sent
+  requests, and every available book on campus to search and request.
+- `/student/listings`: the student's own listings by status. List a book by its title,
+  author and edition (most local textbooks have no ISBN), edit, withdraw and relist.
+
+- `/student/messages`: chats between buyers and sellers, where they agree where and when
+  to hand a book over. Each exchange card opens its chat. The API has no push, so open
+  chats poll every few seconds and the inbox and unread badge less often
+  (`src/features/chat/constants.ts`).
+
+Prices are in Nepali rupees: `formatCurrency` in `src/lib/utils/format.ts` writes them as
+"Rs. 1,00,000".
+
+`src/features/student/` follows the admin areas' layout: `types.ts`, `service.ts`,
+`queries.ts`, `constants.ts` and `components/`, with `session.ts` for the signed-in student.
+Accepting, declining, cancelling and completing exchanges are the API's state transitions
+(`backend/exchanges/services.py`); the portal shows only the actions each side may take.
 
 ## Scripts
 
