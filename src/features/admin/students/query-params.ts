@@ -18,7 +18,6 @@ export function studentQueryParams(query: StudentQuery, withPage = true) {
 	return params.toString();
 }
 
-/** The API's query string for one page of a student's listings. */
 export function listingQueryParams({ status, page }: StudentListingQuery) {
 	const params = new URLSearchParams({ page: String(page), page_size: String(LISTING_PAGE_SIZE) });
 	if (status) params.set("status", status);

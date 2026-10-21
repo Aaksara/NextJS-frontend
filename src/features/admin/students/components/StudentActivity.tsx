@@ -67,7 +67,6 @@ function ActivityItem({ event }: { event: ActivityEvent }) {
 	);
 }
 
-/** The student's history, newest first, loading further back on request. */
 export default function StudentActivity({ studentId }: { studentId: number }) {
 	const [limit, setLimit] = useState(ACTIVITY_PAGE_SIZE);
 	const query = useStudentActivity(studentId, limit);

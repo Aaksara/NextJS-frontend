@@ -14,7 +14,6 @@ interface FormInputProps extends ComponentProps<"input"> {
 	icon?: ReactNode;
 	/** Shown at the right of the label, e.g. a "Forgot password?" link. */
 	labelAside?: ReactNode;
-	/** Messages from the API for this field. */
 	errors?: string[];
 }
 

@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApiRequestError, requestApi, tokenStorage } from "./api-client";
 
-/** Minimal in-memory stand-in for the browser's Storage. */
 function memoryStorage() {
 	const items = new Map<string, string>();
 	return {

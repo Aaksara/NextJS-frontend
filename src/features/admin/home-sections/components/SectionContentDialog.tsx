@@ -28,7 +28,6 @@ import type { HomeSection } from "../types";
 
 interface TextInputProps {
 	field: TextField;
-	/** The input's name, e.g. "items.0.title". */
 	name: string;
 	values: Record<string, string>;
 	errors: Record<string, string[]>;

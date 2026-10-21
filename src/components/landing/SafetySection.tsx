@@ -35,7 +35,6 @@ const builtInSlides: Slide[] = [
 
 interface SafetySectionProps {
 	content: HomeContent["safety"];
-	/** Slides published in the admin console for this section. */
 	slides: Slide[];
 }
 

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils/utils";
 
 interface DialogProps {
 	open: boolean;
-	/** Called for the close button, Escape and backdrop clicks. */
 	onClose: () => void;
 	title: string;
 	description?: string;
@@ -59,7 +58,6 @@ function Dialog({ open, onClose, title, description, children, className }: Dial
 	);
 }
 
-/** Action row at the bottom of a dialog. */
 function DialogFooter({ className, ...props }: ComponentProps<"div">) {
 	return (
 		<div

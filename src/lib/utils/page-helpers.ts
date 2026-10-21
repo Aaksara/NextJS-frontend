@@ -11,7 +11,6 @@ export function getFieldErrors(error: unknown): Record<string, string[]> {
 	return error instanceof ApiRequestError ? error.fields : {};
 }
 
-/** Reads the named fields of a submitted form as strings. */
 export function readForm<K extends string>(event: FormEvent<HTMLFormElement>, ...names: K[]) {
 	const form = new FormData(event.currentTarget);
 	return Object.fromEntries(names.map((name) => [name, String(form.get(name) ?? "")])) as Record<

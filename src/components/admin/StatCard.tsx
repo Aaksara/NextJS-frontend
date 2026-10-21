@@ -20,7 +20,6 @@ interface StatCardProps {
 	footnote?: ReactNode;
 }
 
-/** A single headline number with its label. */
 export default function StatCard({
 	label,
 	value,

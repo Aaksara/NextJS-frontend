@@ -13,7 +13,6 @@ export interface TextField {
 
 export interface ContentForm {
 	fields: TextField[];
-	/** The section's cards, steps or points, one per `ITEM_POSITIONS`. */
 	items?: { noun: string; fields: TextField[] };
 }
 
@@ -49,7 +48,6 @@ export const contentForms: Record<HomeSectionKind, ContentForm> = {
 	call_to_action: { fields: heading("Eyebrow") },
 };
 
-/** Whether the admin has written the section's text, rather than it showing the built-in text. */
 export const hasCustomContent = (
 	section: HomeSection,
 ): section is HomeSection & { content: SectionContent } => Object.keys(section.content).length > 0;
@@ -57,7 +55,6 @@ export const hasCustomContent = (
 /** An item field's input name. It matches the API's error path, e.g. "items.1.text". */
 export const itemFieldName = (position: number, field: string) => `items.${position}.${field}`;
 
-/** The content as form values, keyed by input name. */
 export function toFormValues(content: SectionContent) {
 	const values: Record<string, string> = {
 		eyebrow: content.eyebrow,
@@ -71,7 +68,6 @@ export function toFormValues(content: SectionContent) {
 	return values;
 }
 
-/** Reads a submitted content form back into the API's shape. */
 export function readContent(form: FormData, { fields, items }: ContentForm): SectionContent {
 	const text = (name: string) => String(form.get(name) ?? "").trim();
 	const content: Record<string, unknown> = Object.fromEntries(

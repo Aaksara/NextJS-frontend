@@ -7,7 +7,6 @@ const LOCATIONS = "/api/admin/meetup-locations/";
 export const campusService = {
 	getSettings: () => requestApi<CampusSettings>("/api/admin/campus/"),
 
-	/** Every meetup spot, active ones first. */
 	listLocations: () => requestApi<MeetupLocation[]>(LOCATIONS),
 
 	createLocation: (input: MeetupLocationInput) =>

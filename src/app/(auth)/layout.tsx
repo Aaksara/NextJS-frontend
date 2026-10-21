@@ -7,7 +7,6 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import { Card } from "@/components/ui/card";
 import { cmsService } from "@/services/cms.service";
 
-/** Header, content and footer for every auth page. On desktop a showcase panel joins the form. */
 export default async function AuthLayout({ children }: { children: ReactNode }) {
 	const slides = await cmsService.getSlides("sign_in");
 

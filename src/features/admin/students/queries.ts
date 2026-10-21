@@ -28,7 +28,6 @@ export function useStudents(query: StudentQuery) {
 	return useQuery({
 		queryKey: studentKeys.list(query),
 		queryFn: () => studentService.list(query),
-		// Keep showing the current page while the next one loads.
 		placeholderData: keepPreviousData,
 	});
 }
@@ -52,7 +51,6 @@ export function useStudentActivity(id: number, limit: number) {
 	return useQuery({
 		queryKey: studentKeys.activity(id, limit),
 		queryFn: () => studentService.activity(id, limit),
-		// Keep the events already shown while older ones load.
 		placeholderData: keepPreviousData,
 	});
 }
@@ -61,7 +59,6 @@ export function useDirectorySummary() {
 	return useQuery({ queryKey: studentKeys.summary, queryFn: studentService.getSummary });
 }
 
-/** A change to one student that refreshes the directory and reports the outcome. */
 function useStudentAction(action: (id: number) => Promise<unknown>, successMessage: string) {
 	const queryClient = useQueryClient();
 	return useMutation({

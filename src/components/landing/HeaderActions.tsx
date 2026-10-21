@@ -6,7 +6,6 @@ import { useSession } from "@/components/landing/session";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 
-/** Sign in and Get started, or the signed-in student's name and Sign out. */
 export default function HeaderActions() {
 	const { user, signOut } = useSession();
 

@@ -1,4 +1,3 @@
-/** Makes the browser save `file` under `filename`. */
 export function saveFile(file: Blob, filename: string) {
 	const url = URL.createObjectURL(file);
 	const link = document.createElement("a");

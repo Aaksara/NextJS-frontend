@@ -46,7 +46,6 @@ export default function StudentsView() {
 		? selectedId
 		: (students[0]?.id ?? null);
 
-	/** Applies a filter change and goes back to the first page of results. */
 	function changeFilters(update: () => void) {
 		update();
 		setPage(1);

@@ -15,7 +15,6 @@ const states = {
 	down: { label: "Unreachable", detail: "The API did not respond.", dot: "bg-destructive" },
 };
 
-/** Live status of the backend, polled once a minute. */
 export default function PlatformHealth() {
 	const { isPending, isError } = useQuery({
 		queryKey: ["platform", "health"],

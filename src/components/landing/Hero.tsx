@@ -30,7 +30,6 @@ const builtInSlides: Slide[] = [
 
 interface HeroProps {
 	content: HomeContent["hero"];
-	/** Slides published in the admin console. */
 	slides: Slide[];
 	/** Hides the "How it works" button when that section is hidden. */
 	showHowItWorks: boolean;

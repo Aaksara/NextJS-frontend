@@ -1,4 +1,3 @@
-/** As returned by `/api/admin/students/`. */
 export interface Student {
 	id: number;
 	email: string;
@@ -30,7 +29,6 @@ export interface StudentListing {
 	/** Decimal string, e.g. "25.00". `null` for swaps and donations. */
 	price: string | null;
 	status: ListingStatus;
-	/** Exchange requests the listing has drawn, in any state. */
 	request_count: number;
 	created_at: string;
 }
@@ -51,7 +49,6 @@ export interface StudentListingQuery {
  * asked for the book, "seller" when it is theirs, and `""` for events with no other side.
  */
 export interface ActivityEvent {
-	/** Unique within one student's history. */
 	id: string;
 	kind:
 		| "joined"
@@ -66,14 +63,11 @@ export interface ActivityEvent {
 	role: "buyer" | "seller" | "";
 	listing_id: number | null;
 	book_title: string;
-	/** Full name of the other student. */
 	counterpart: string;
 }
 
 export interface ActivityPage {
-	/** Newest first. */
 	results: ActivityEvent[];
-	/** Whether older events exist beyond `results`. */
 	has_more: boolean;
 }
 
@@ -88,7 +82,6 @@ export interface DirectorySummary {
 	active_buyers: number;
 }
 
-/** Which students the directory lists. */
 export type StudentFilter = "all" | "unverified" | "suspended";
 
 export interface StudentQuery {

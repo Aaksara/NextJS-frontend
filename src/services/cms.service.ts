@@ -13,7 +13,6 @@ export const HOME_SECTIONS = [
 
 export type HomeSectionKind = (typeof HOME_SECTIONS)[number];
 
-/** The storefront's sliders. Each shows its own slides from the admin console. */
 export type SliderKey = "home_hero" | "home_safety" | "sign_in";
 
 type ApiSlide = { id: number; caption: string; link: string; image: string; alt_text: string };
@@ -56,7 +55,6 @@ async function getPublic<T>(path: string, fallback: T): Promise<T> {
 }
 
 export const cmsService = {
-	/** Kinds of the visible home page sections, top to bottom. */
 	getHomeSections: async () => {
 		const kinds = await getPublic<string[]>("/api/cms/home-sections/", [...HOME_SECTIONS]);
 		// A kind added to the API before this app knows how to show it is skipped.
@@ -69,7 +67,6 @@ export const cmsService = {
 		return { ...builtInHomeContent, ...saved };
 	},
 
-	/** A slider's published slides, in order. Empty when it has none. */
 	getSlides: async (slider: SliderKey): Promise<Slide[]> => {
 		const slides = await getPublic<ApiSlide[]>(`/api/cms/slides/?slider=${slider}`, []);
 		return slides.map((slide) => ({

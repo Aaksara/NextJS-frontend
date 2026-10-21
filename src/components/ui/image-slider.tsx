@@ -11,7 +11,6 @@ export interface Slide {
 	image: string;
 	alt: string;
 	caption: string;
-	/** Makes the caption a link. */
 	href?: string;
 }
 

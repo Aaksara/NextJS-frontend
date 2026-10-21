@@ -13,7 +13,6 @@ import StudentActions from "./StudentActions";
 import StudentActivity from "./StudentActivity";
 import StudentListings from "./StudentListings";
 
-/** One student's full record: account, every listing and their history. */
 export default function StudentDetailView({ studentId }: { studentId: number }) {
 	const query = useStudent(studentId);
 	const student = query.data;

@@ -9,7 +9,6 @@ const HOME_SECTIONS = "/api/admin/home-sections/";
 const contentUrl = (kind: HomeSectionKind) => `${HOME_SECTIONS}${kind}/content/`;
 
 export const homeSectionService = {
-	/** Every section, top to bottom. */
 	list: () => requestApi<HomeSection[]>(HOME_SECTIONS),
 
 	/** Saves the order and visibility. `sections` must contain every kind once. */
@@ -20,7 +19,6 @@ export const homeSectionService = {
 	saveContent: (kind: HomeSectionKind, content: SectionContent) =>
 		requestApi<HomeSection>(contentUrl(kind), { method: "PUT", body: content }),
 
-	/** Goes back to the site's built-in text. */
 	resetContent: (kind: HomeSectionKind) =>
 		requestApi<HomeSection>(contentUrl(kind), { method: "DELETE" }),
 };

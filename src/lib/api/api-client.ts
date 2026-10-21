@@ -18,7 +18,6 @@ export type ApiRequestOptions = {
 	body?: object;
 };
 
-/** An error response: a message plus the messages for each form field. */
 export class ApiRequestError extends Error {
 	constructor(
 		message: string,
@@ -81,7 +80,6 @@ async function refreshTokens() {
 	return true;
 }
 
-/** Sends the request, refreshing expired tokens once and retrying. */
 async function sendWithRefresh(endpoint: string, options: ApiRequestOptions) {
 	const response = await send(endpoint, options);
 	if (response.status === 401 && !NO_REFRESH.includes(endpoint) && (await refreshTokens())) {
@@ -132,14 +130,12 @@ export async function requestApi<T = unknown>(
 	throw toApiError(response.status, data);
 }
 
-/** Downloads a file the API generates, e.g. a CSV export. */
 export async function requestFile(endpoint: string): Promise<Blob> {
 	const response = await sendWithRefresh(endpoint, {});
 	if (response.ok) return response.blob();
 	throw toApiError(response.status, await response.json().catch(() => null));
 }
 
-/** A page of results from a paginated list endpoint. */
 export type Paginated<T> = {
 	count: number;
 	next: string | null;

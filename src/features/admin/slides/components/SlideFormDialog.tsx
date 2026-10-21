@@ -22,7 +22,6 @@ interface SlideFormDialogProps {
 	onClose: () => void;
 	/** The slide to edit. Without it the dialog adds a new one. */
 	slide?: Slide;
-	/** Where a new slide goes. */
 	slider: SliderKey;
 }
 

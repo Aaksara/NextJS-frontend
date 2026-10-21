@@ -31,7 +31,6 @@ import type { ListingStatus, StudentListingQuery } from "../types";
 
 const statuses = Object.entries(listingStatusLabels) as [ListingStatus, string][];
 
-/** Every book the student has listed, filterable by status. */
 export default function StudentListings({ studentId }: { studentId: number }) {
 	const [status, setStatus] = useState<StudentListingQuery["status"]>("");
 	const [page, setPage] = useState(1);

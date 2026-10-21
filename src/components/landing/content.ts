@@ -1,6 +1,5 @@
 /** The heading every home page section has. Mirrors `cms/content.py` in the backend. */
 export interface SectionText {
-	/** The small line above the title; the badge on the hero. */
 	eyebrow: string;
 	title: string;
 	description: string;
@@ -43,7 +42,6 @@ export function withPositionStyles<Item, Style>(items: readonly Item[], styles: 
 	});
 }
 
-/** Shown for every section the admin has not rewritten. */
 export const builtInHomeContent: HomeContent = {
 	hero: {
 		eyebrow: "Student-to-student textbook exchange",

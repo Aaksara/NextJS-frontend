@@ -27,7 +27,6 @@ export function useSaveHomeSections() {
 	});
 }
 
-/** A change to one section's text, which then refreshes the list and the home page. */
 function useContentMutation<Input>(
 	mutationFn: (input: Input) => Promise<unknown>,
 	{ successMessage, toastErrors }: { successMessage: string; toastErrors: boolean },

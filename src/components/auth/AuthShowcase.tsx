@@ -31,12 +31,10 @@ const builtInSlides: Slide[] = [
 ];
 
 interface AuthShowcaseProps {
-	/** Slides published in the admin console for the sign-in pages. */
 	slides: Slide[];
 	className?: string;
 }
 
-/** Marketing panel joined to the auth form on wide screens. */
 export default function AuthShowcase({ slides, className }: AuthShowcaseProps) {
 	return (
 		<div

@@ -16,7 +16,6 @@ function isActive(pathname: string, href: string) {
 	return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Icon navigation that highlights the item for the current route. */
 export function NavBar({ items }: { items: NavBarItem[] }) {
 	const pathname = usePathname();
 

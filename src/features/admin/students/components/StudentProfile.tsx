@@ -14,7 +14,6 @@ import { studentPath } from "../routes";
 import { ProfileSection, StudentAccountDetails, StudentIdentity } from "./StudentAccount";
 import StudentActions from "./StudentActions";
 
-/** A quick look at the selected student beside the directory, with moderation actions. */
 export default function StudentProfile({ studentId }: { studentId: number }) {
 	const query = useStudent(studentId);
 	const student = query.data;

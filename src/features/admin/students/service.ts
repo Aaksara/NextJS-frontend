@@ -27,13 +27,11 @@ export const studentService = {
 			`${STUDENTS}${id}/listings/?${listingQueryParams(query)}`,
 		),
 
-	/** The `limit` newest events in the student's history. */
 	activity: (id: number, limit: number) =>
 		requestApi<ActivityPage>(`${STUDENTS}${id}/activity/?limit=${limit}`),
 
 	getSummary: () => requestApi<DirectorySummary>(`${STUDENTS}summary/`),
 
-	/** Every student matching the filters, as a CSV file. */
 	exportCsv: (query: StudentQuery) =>
 		requestFile(`${STUDENTS}export/?${studentQueryParams(query, false)}`),
 

@@ -13,7 +13,6 @@ import {
 } from "../queries";
 import type { Student } from "../types";
 
-/** Moderation actions, offered only where they apply to the student's state. */
 export default function StudentActions({ student }: { student: Student }) {
 	const suspend = useSuspendStudent();
 	const reactivate = useReactivateStudent();

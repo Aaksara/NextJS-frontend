@@ -4,13 +4,11 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils/utils";
 
 type IconInputProps = React.ComponentProps<"input"> & {
-	/** Decorative icon inside the left edge. */
 	startIcon?: React.ReactNode;
 	/** Control inside the right edge, e.g. a small `IconButton`. */
 	endAdornment?: React.ReactNode;
 };
 
-/** An `Input` with an icon and/or a control placed inside it. */
 function IconInput({ startIcon, endAdornment, className, ...props }: IconInputProps) {
 	return (
 		<div className="relative">

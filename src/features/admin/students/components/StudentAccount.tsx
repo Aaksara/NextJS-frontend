@@ -20,7 +20,6 @@ function Detail({ label, value }: { label: string; value: string }) {
 	);
 }
 
-/** A titled block of the student profile. */
 export function ProfileSection({ title, children }: { title: string; children: ReactNode }) {
 	return (
 		<section className="space-y-3">

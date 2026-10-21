@@ -30,7 +30,6 @@ export function useSaveLocation() {
 	});
 }
 
-/** Retires a spot, or brings it back. */
 export function useSetLocationActive() {
 	const queryClient = useQueryClient();
 	return useMutation({
