@@ -1,8 +1,7 @@
-import { ArrowRight, BadgeCheck, CircleCheck, Search } from "lucide-react";
+import { BadgeCheck, CircleCheck, Search } from "lucide-react";
 import Link from "next/link";
 
 import type { HomeContent } from "@/components/landing/content";
-import { SignedOut } from "@/components/landing/session";
 import Container from "@/components/layout/Container";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,16 +57,8 @@ export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 								Browse books
 							</Link>
 						</Button>
-						<SignedOut>
-							<Button asChild size="lg" variant="outlined" className="rounded-full">
-								<Link href="/register">
-									Create your account
-									<ArrowRight />
-								</Link>
-							</Button>
-						</SignedOut>
 						{showHowItWorks && (
-							<Button asChild size="lg" variant="ghost" className="rounded-full text-foreground">
+							<Button asChild size="lg" variant="outlined" className="rounded-full">
 								<Link href="#how-it-works">How it works</Link>
 							</Button>
 						)}
