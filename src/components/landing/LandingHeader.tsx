@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import HeaderActions from "@/components/landing/HeaderActions";
+import MobileMenu from "@/components/landing/MobileMenu";
 import { linksTo } from "@/components/landing/section-links";
 import Brand from "@/components/layout/Brand";
 import Container from "@/components/layout/Container";
@@ -15,13 +16,12 @@ export default function LandingHeader({
 	const links = linksTo(visibleSections);
 	return (
 		<header className="sticky top-0 z-40 border-b bg-card/80 backdrop-blur">
-			{/* On phones the section links wrap onto a second row under the logo. */}
-			<Container className="flex flex-wrap items-center justify-between gap-x-6 py-3 md:h-16 md:flex-nowrap md:py-0">
+			<Container className="flex h-16 items-center justify-between gap-6">
 				<Brand />
-				<nav aria-label="Sections" className="order-last w-full md:order-none md:w-auto">
-					<ul className="flex items-center gap-6 overflow-x-auto pt-2 md:gap-8 md:pt-0">
+				<nav aria-label="Sections" className="hidden md:block">
+					<ul className="flex items-center gap-8">
 						{links.map(({ href, label }) => (
-							<li key={href} className="shrink-0">
+							<li key={href}>
 								<Link
 									href={href}
 									className={textVariants({
@@ -35,7 +35,8 @@ export default function LandingHeader({
 						))}
 					</ul>
 				</nav>
-				<HeaderActions />
+				<HeaderActions className="hidden md:flex" />
+				<MobileMenu links={links} className="md:hidden" />
 			</Container>
 		</header>
 	);

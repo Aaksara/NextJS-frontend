@@ -11,25 +11,6 @@ const steps = [
 	{ icon: MapPin, text: "Meet on campus and pay in person" },
 ];
 
-/** Shown until the admin publishes slides for this slider. */
-const builtInSlides: Slide[] = [
-	{
-		image: "/images/slides/campus-library.webp",
-		alt: "Curved library shelves full of books",
-		caption: "Find the books for your course",
-	},
-	{
-		image: "/images/slides/textbook-stack.webp",
-		alt: "A stack of textbooks",
-		caption: "List a book in seconds",
-	},
-	{
-		image: "/images/slides/graduation.webp",
-		alt: "Graduates throwing their caps in the air",
-		caption: "Pass your textbooks on",
-	},
-];
-
 interface AuthShowcaseProps {
 	slides: Slide[];
 	className?: string;
@@ -65,7 +46,7 @@ export default function AuthShowcase({ slides, className }: AuthShowcaseProps) {
 			</ul>
 
 			<ImageSlider
-				slides={slides.length ? slides : builtInSlides}
+				slides={slides}
 				sizes="(min-width: 1280px) 480px, 40vw"
 				aria-label="About Akshara"
 				className="mt-auto h-56 shadow-md"

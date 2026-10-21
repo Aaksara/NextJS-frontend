@@ -15,7 +15,7 @@ const cardStyles = [
 
 export default function ListingTypes({ content }: { content: HomeContent["listing_types"] }) {
 	return (
-		<section id="sell-swap-donate" className="scroll-mt-28 py-20 md:scroll-mt-16">
+		<section id="sell-swap-donate" className="scroll-mt-16 py-14 md:py-20">
 			<Container>
 				<SectionHeading
 					eyebrow={content.eyebrow}

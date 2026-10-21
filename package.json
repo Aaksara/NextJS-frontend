@@ -13,8 +13,8 @@
 		"start": "next start",
 		"lint": "biome lint . && eslint . --max-warnings=0",
 		"format": "biome format . --write",
-		"check": "biome check . && eslint . --max-warnings=0 && tsc --noEmit && vitest run",
-		"type-check": "tsc --noEmit",
+		"check": "biome check . && eslint . --max-warnings=0 && next typegen && tsc --noEmit && vitest run",
+		"type-check": "next typegen && tsc --noEmit",
 		"test": "vitest run"
 	},
 	"dependencies": {

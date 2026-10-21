@@ -10,9 +10,9 @@ import { Text } from "@/components/ui/typography";
 export default function CallToAction({ content }: { content: HomeContent["call_to_action"] }) {
 	return (
 		<SignedOut>
-			<section className="py-20">
+			<section className="py-14 md:py-20">
 				<Container>
-					<div className="rounded-3xl bg-panel px-6 py-14 text-center text-panel-foreground shadow-xl sm:px-12">
+					<div className="rounded-3xl bg-panel px-6 py-12 text-center sm:py-14 text-panel-foreground shadow-xl sm:px-12">
 						<Text variant="label-sm" className="uppercase tracking-widest text-panel-accent">
 							{content.eyebrow}
 						</Text>
@@ -26,7 +26,7 @@ export default function CallToAction({ content }: { content: HomeContent["call_t
 						<Text variant="body-lg" className="mx-auto mt-4 max-w-xl text-panel-muted">
 							{content.description}
 						</Text>
-						<div className="mt-8 flex flex-wrap justify-center gap-3">
+						<div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
 							<Button
 								asChild
 								size="lg"

@@ -38,7 +38,7 @@ interface HeroProps {
 export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 	return (
 		<section className="bg-linear-to-b from-primary-container/40 to-background">
-			<Container className="grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
+			<Container className="grid items-center gap-10 py-10 sm:py-16 lg:grid-cols-[1.15fr_1fr] lg:py-24">
 				<div className="space-y-6">
 					<Badge className="border bg-card text-foreground">
 						<BadgeCheck className="text-secondary" />
@@ -50,7 +50,7 @@ export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 					<Text variant="body-lg" tone="muted" className="max-w-lg">
 						{content.description}
 					</Text>
-					<div className="flex flex-wrap gap-3">
+					<div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
 						<SignedOut>
 							<Button asChild size="lg" className="rounded-full">
 								<Link href="/register">
@@ -83,7 +83,7 @@ export default function Hero({ content, slides, showHowItWorks }: HeroProps) {
 					preloadFirst
 					sizes="(min-width: 1024px) 45vw, 100vw"
 					aria-label="Trading textbooks on campus"
-					className="h-80 rounded-3xl shadow-xl shadow-primary/10 sm:h-96 lg:h-112"
+					className="h-72 rounded-3xl shadow-xl shadow-primary/10 sm:h-96 lg:h-112"
 				/>
 			</Container>
 		</section>

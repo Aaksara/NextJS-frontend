@@ -40,7 +40,7 @@ interface SafetySectionProps {
 
 export default function SafetySection({ content, slides }: SafetySectionProps) {
 	return (
-		<section id="safety" className="scroll-mt-28 border-y bg-muted/60 py-20 md:scroll-mt-16">
+		<section id="safety" className="scroll-mt-16 border-y bg-muted/60 py-14 md:py-20">
 			<Container className="grid items-center gap-12 lg:grid-cols-2">
 				<div>
 					<SectionHeading
@@ -79,7 +79,7 @@ export default function SafetySection({ content, slides }: SafetySectionProps) {
 					tint="caption"
 					sizes="(min-width: 1024px) 45vw, 100vw"
 					aria-label="Safe exchanges on campus"
-					className="h-80 rounded-3xl shadow-xl shadow-primary/10 sm:h-96"
+					className="h-72 rounded-3xl shadow-xl shadow-primary/10 sm:h-96"
 				/>
 			</Container>
 		</section>

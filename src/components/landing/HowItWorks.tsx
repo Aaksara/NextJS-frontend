@@ -15,7 +15,7 @@ const stepStyles = [
 
 export default function HowItWorks({ content }: { content: HomeContent["how_it_works"] }) {
 	return (
-		<section id="how-it-works" className="scroll-mt-28 border-y bg-muted/60 py-20 md:scroll-mt-16">
+		<section id="how-it-works" className="scroll-mt-16 border-y bg-muted/60 py-14 md:py-20">
 			<Container>
 				<SectionHeading
 					align="center"

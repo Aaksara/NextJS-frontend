@@ -1,9 +1,10 @@
 import Container from "@/components/layout/Container";
 import { Text } from "@/components/ui/typography";
+import { cn } from "@/lib/utils/utils";
 
-export default function SiteFooter() {
+export default function SiteFooter({ className }: { className?: string }) {
 	return (
-		<footer className="border-t bg-card">
+		<footer className={cn("border-t bg-card", className)}>
 			<Container className="flex flex-col items-center gap-1 py-5 sm:flex-row sm:justify-between">
 				<Text variant="body-sm" tone="muted">
 					© {new Date().getFullYear()} Akshara
