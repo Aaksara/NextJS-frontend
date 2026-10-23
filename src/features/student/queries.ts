@@ -2,8 +2,9 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { toast } from "sonner";
 
 import { listingsKey } from "@/features/listings/keys";
-import { getErrorMessage } from "@/lib/utils/page-helpers";
+import { getErrorMessage, getFieldErrors } from "@/lib/utils/page-helpers";
 
+import type { PhotoChanges } from "./photos";
 import { studentService } from "./service";
 import type {
 	ExchangeGroup,
@@ -97,23 +98,67 @@ function useRefreshExchanges() {
 		]);
 }
 
-/** Lists a book. Errors are left to the form. */
+/**
+ * Applies the form's photo changes to a saved listing. Removals go first to make room
+ * under the photo limit, and uploads go one at a time to keep the order they were picked in.
+ *
+ * Returns the first failure rather than throwing: the listing itself is saved by then, and
+ * submitting the form again would list the book twice.
+ */
+async function applyPhotoChanges(listingId: number, { added, removed }: PhotoChanges) {
+	try {
+		await Promise.all(removed.map((id) => studentService.removeListingPhoto(listingId, id)));
+		for (const file of added) await studentService.addListingPhoto(listingId, file);
+		return null;
+	} catch (error) {
+		return error;
+	}
+}
+
+function reportPhotoFailure(title: string, error: unknown) {
+	// The form has closed, so a rejected file's message cannot go next to a field.
+	const reason = getFieldErrors(error).image?.join(" ") ?? getErrorMessage(error);
+	toast.error(`${title} is saved, but its photos were not all updated`, {
+		description: `${reason} Edit the listing to try again.`,
+	});
+}
+
+/** Lists a book with its photos. Errors saving the listing are left to the form. */
 export function useCreateListing() {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: (input: ListingInput) => studentService.createListing(input),
-		onSuccess: (listing) => toast.success(`${listing.book.title} is listed`),
+		mutationFn: async ({ input, photos }: { input: ListingInput; photos: PhotoChanges }) => {
+			const listing = await studentService.createListing(input);
+			return { listing, photoError: await applyPhotoChanges(listing.id, photos) };
+		},
+		onSuccess: ({ listing, photoError }) =>
+			photoError
+				? reportPhotoFailure(listing.book.title, photoError)
+				: toast.success(`${listing.book.title} is listed`),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: studentKeys.listings }),
 	});
 }
 
-/** Edits a listing. Errors are left to the form. */
+/** Edits a listing and its photos. Errors saving the listing are left to the form. */
 export function useUpdateListing() {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: ({ id, input }: { id: number; input: ListingChanges }) =>
-			studentService.updateListing(id, input),
-		onSuccess: () => toast.success("Listing updated"),
+		mutationFn: async ({
+			id,
+			input,
+			photos,
+		}: {
+			id: number;
+			input: ListingChanges;
+			photos: PhotoChanges;
+		}) => {
+			const listing = await studentService.updateListing(id, input);
+			return { listing, photoError: await applyPhotoChanges(id, photos) };
+		},
+		onSuccess: ({ listing, photoError }) =>
+			photoError
+				? reportPhotoFailure(listing.book.title, photoError)
+				: toast.success("Listing updated"),
 		onSettled: () => queryClient.invalidateQueries({ queryKey: studentKeys.listings }),
 	});
 }

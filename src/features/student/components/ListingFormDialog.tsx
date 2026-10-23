@@ -18,6 +18,7 @@ import { readForm } from "@/lib/utils/page-helpers";
 import { type FieldErrors, reportFormError } from "../form-errors";
 import { useCreateListing, useUpdateListing } from "../queries";
 import type { Listing, ListingInput } from "../types";
+import ListingPhotosField, { useListingPhotos } from "./ListingPhotosField";
 
 const conditions = Object.entries(conditionLabels) as [Condition, string][];
 
@@ -55,7 +56,11 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 	const update = useUpdateListing();
 	const [errors, setErrors] = useState<FieldErrors>({});
 	const [listingType, setListingType] = useState<ListingType>(listing?.listing_type ?? "sell");
+	const photos = useListingPhotos(listing?.images);
 	const pending = create.isPending || update.isPending;
+	const idleLabel = listing ? "Save changes" : "List book";
+	const busyLabel = photos.changes.added.length ? "Uploading photos…" : "Saving…";
+	const submitLabel = pending ? busyLabel : idleLabel;
 
 	function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -81,13 +86,13 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 			description: form.description.trim(),
 		};
 		const options = { onSuccess: onDone, onError: reportFormError(setErrors) };
-		if (listing) update.mutate({ id: listing.id, input }, options);
-		else create.mutate(input, options);
+		if (listing) update.mutate({ id: listing.id, input, photos: photos.changes }, options);
+		else create.mutate({ input, photos: photos.changes }, options);
 	}
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<div className="space-y-4 px-6 py-5">
+			<div className="max-h-[65vh] space-y-4 overflow-y-auto px-6 py-5">
 				<Field htmlFor="listing-title" label="Book title" errors={errors.title}>
 					<Input
 						id="listing-title"
@@ -197,13 +202,15 @@ function ListingForm({ listing, onDone }: { listing?: Listing; onDone: () => voi
 						defaultValue={listing?.description}
 					/>
 				</Field>
+
+				<ListingPhotosField photos={photos} />
 			</div>
 			<DialogFooter>
 				<Button type="button" variant="ghost" onClick={onDone}>
 					Cancel
 				</Button>
 				<Button type="submit" disabled={pending}>
-					{pending ? "Saving…" : listing ? "Save changes" : "List book"}
+					{submitLabel}
 				</Button>
 			</DialogFooter>
 		</form>

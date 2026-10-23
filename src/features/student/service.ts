@@ -13,6 +13,7 @@ import type {
 	ExchangeInput,
 	ExchangeQuery,
 	ListingChanges,
+	ListingImage,
 	ListingInput,
 	ListingQuery,
 	MyListingQuery,
@@ -69,6 +70,16 @@ export const studentService = {
 
 	updateListing: (id: number, changes: ListingChanges) =>
 		requestApi<ViewerListing>(`${LISTINGS}${id}/`, { method: "PATCH", body: changes }),
+
+	/** Seller only. Photos show in upload order; the first is the listing's cover. */
+	addListingPhoto: (listingId: number, file: File) => {
+		const body = new FormData();
+		body.append("image", file);
+		return requestApi<ListingImage>(`${LISTINGS}${listingId}/images/`, { body });
+	},
+
+	removeListingPhoto: (listingId: number, imageId: number) =>
+		requestApi<void>(`${LISTINGS}${listingId}/images/${imageId}/`, { method: "DELETE" }),
 
 	exchanges: ({ group, page }: ExchangeQuery) => {
 		const filters = { ...exchangeGroupFilters[group], page, page_size: EXCHANGE_PAGE_SIZE };
